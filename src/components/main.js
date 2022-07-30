@@ -5,8 +5,8 @@ import CssBaseline from '@mui/material/CssBaseline';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Link from '@mui/material/Link';
-import Content from './Content';
-import Header from './Header';
+import Content from './content';
+import Header from './header';
 import Container from '@mui/material/Container';
 
 let theme = createTheme({
@@ -153,10 +153,11 @@ theme = {
 };
 
 
-export default function Paperbase() {
+export default function Main() {
 
   return (
     <ThemeProvider theme={theme}>
+      <title>game</title>
       <Box sx={{ display: 'flex', minHeight: '100vh' }}>
         <CssBaseline />
         <Box sx={{ flex: 1 , display: 'flex', flexDirection: 'column'}}>

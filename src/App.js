@@ -1,9 +1,9 @@
-import Paperbase from "./components/paperbase/Paperbase";
+import Main from "./components/main";
 
 function App() {
   return (
     <>
-      <Paperbase/>
+      <Main/>
     </>
   );
 }

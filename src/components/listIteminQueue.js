@@ -23,8 +23,6 @@ export default function ListItemInQueue(props) {
     ['pineapple', 10]
   ]);
   const [Items, setItems] = useState({})
-
-  
   const { onClose, open, anchorEl } = props;
 
   const handleClose = () => {
@@ -70,5 +68,4 @@ export default function ListItemInQueue(props) {
 ListItemInQueue.propTypes = {
   onClose: PropTypes.func.isRequired,
   open: PropTypes.bool.isRequired,
-  anchorEl: PropTypes.any.isRequired
 };
