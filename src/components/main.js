@@ -8,7 +8,8 @@ import Link from '@mui/material/Link';
 import Content from './content';
 import Header from './header';
 import Container from '@mui/material/Container';
-
+import Setting from './setting'
+import { Route, Switch } from "react-router-dom";
 let theme = createTheme({
   palette: {
     primary: {
@@ -164,7 +165,11 @@ export default function Main() {
           <Header />
           <Box component="main" sx={{ flex: 1, py: 6, px: 4, bgcolor: '#eaeff1' }}>
             <Container>
-              <Content/>
+              <Switch>
+                <Route exact from="/" render={props => <Content {...props} />}/>
+                <Route exact path="/setting" render={props => <Setting {...props} />}/>
+              </Switch>
+              {/* <Content/> */}
             </Container>
           </Box>
         </Box>

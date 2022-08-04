@@ -14,11 +14,16 @@ import Tabs from "@mui/material/Tabs";
 import Toolbar from "@mui/material/Toolbar";
 import Tooltip from "@mui/material/Tooltip";
 import Typography from "@mui/material/Typography";
-
+import { withRouter } from "react-router-dom";
 const lightColor = "rgba(255, 255, 255, 0.7)";
 
 function Header(props) {
-  const { onDrawerToggle } = props;
+  const { history } = props;
+
+  const handleButtonClick = pageURL => {
+    history.push(pageURL);
+
+  };
 
   return (
     <React.Fragment>
@@ -35,6 +40,7 @@ function Header(props) {
               variant="contained"
               size="large"
               sx={{ margin: "10px", bgcolor: "#c1c1c1" }}
+              onClick={() => handleButtonClick("/setting")}
             >
               Setting
             </Button>
@@ -45,4 +51,4 @@ function Header(props) {
   );
 }
 
-export default Header;
+export default withRouter(Header);
