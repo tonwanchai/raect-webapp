@@ -8,6 +8,12 @@ import IconButton from '@mui/material/IconButton';
 import { makeStyles } from '@mui/material/styles';
 import BoxDialog from './boxDialog'
 import CartDialog from './cartDialog'
+import axios from 'axios'
+
+const baseURL = 'http://localhost:5000/fruit/'
+const client =  axios.create({
+  baseURL:baseURL
+})
 
 export default function Content() {
   const [openCheckButton, setOpenCheckButton] = React.useState(false);
@@ -16,6 +22,21 @@ export default function Content() {
   const [dataFromQueue, setDataFromQueue] = React.useState('Apple')
   const [dataFromRandom, setDataFromRandom] = React.useState([])
   const [anchorEl, setAnchorEl] = React.useState(null)
+  const [data, setData] = React.useState(null)
+  const [error, setError] = React.useState(null)
+
+  React.useEffect(() => {
+    client
+      .get()
+      .then((res) => {
+        setData(res.data)
+        console.log(res)
+        console.log(res.data)
+      })
+      .catch((err) => {
+        setError(err)
+      })
+  },[0])
 
   const handleClickOpenCheckButton = (event) => {
     setOpenCheckButton(true);
@@ -48,8 +69,11 @@ export default function Content() {
     setOpenCartButton(false);
   };
   
+  if(!data) return <></>
+
   return (
     <>
+      {data[0].name}
       <Button variant="contained" onClick={handleClickOpenCheckButton}>Check</Button>
       <br/>
       <Box textAlign='center'>
