@@ -2,9 +2,9 @@ let express = require("express"),
   mongoose = require("mongoose"),
   cors = require("cors"),
   bodyParser = require("body-parser"),
-  dbConfig = require("../database/db");
+  dbConfig = require("./database/db");
 
-const fruitRoute = require("../routes/routes");
+const fruitRoute = require("./routes/routes");
 
 mongoose.Promise = global.Promise;
 

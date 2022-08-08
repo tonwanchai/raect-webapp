@@ -36,6 +36,7 @@ router.route("/edit-fruit/:id").get((req, res) => {
 });
 
 router.route("/update-fruit/:id").put((req, res, next) => {
+  console.log(req)
   FruitSchema.findByIdAndUpdate(
     req.params.id,
     {

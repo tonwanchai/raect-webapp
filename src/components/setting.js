@@ -2,10 +2,11 @@ import { Box, Button, IconButton, InputLabel, MenuItem, FormControl, Select } fr
 import Paper from "@mui/material/Paper";
 import Stack from "@mui/material/Stack";
 import { styled } from "@mui/material/styles";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import AddBoxIcon from "@mui/icons-material/AddBox";
 import AddDialog from "./addDialog";
 import EditDialog from "./editDialog";
+import { createFruit, getFruits } from '../functions';
 
 const Item = styled(Button)(({ theme }) => ({
   backgroundColor: theme.palette.mode === "dark" ? "#1A2027" : "#fff",
@@ -15,11 +16,29 @@ const Item = styled(Button)(({ theme }) => ({
   color: theme.palette.text.secondary,
 }));
 export default function Setting(props) {
-  const [items, setItems] = useState([["Apple"], ["Banana"]]);
+  const [fruits, setFruits] = useState([])
+  const [fruit, setFruit] = useState({name: '', image: ''})
   const [openAddItem, setOpenAddItem] = useState(false);
   const [openEditItem, setOpenEditItem] = useState(false);
   const [selectedItem, setSelectedItem] = useState("");
   const [addSelectBox, setAddSelectBox] = useState([])
+  const [loading, setLoading] = useState(false)
+  useEffect(() => {
+    const fetchData = async () => {
+      const result = await getFruits();
+      console.log('fetch data;m', result)
+      setFruits(result)
+    }
+    fetchData()
+    setLoading(true)
+  }, [])
+
+  const onSubmitHandler = async (e) => {
+    e.preventDefault();
+    const result = await createFruit(fruit);
+
+    setFruits([...fruits, result]);
+  }
 
   const handleClickOpenAddItemButton = () => {
     setOpenAddItem(true);
@@ -43,18 +62,20 @@ export default function Setting(props) {
       
     ])
   }
+
+  if(!loading) return <></>
   return (
     <>
       <Box sx={{ display: "flex", justifyContent: "space-between" }}>
         <Box sx={{ border: "1px dashed grey", width: "45%", height: 824 }}>
           <br />
           <Stack spacing={2} sx={{ width: "80%", margin: "auto" }}>
-            {items.map((item) => (
+            {fruits.map((fruit) => (
               <Item
-                key={item}
-                onClick={() => handleClickOpenEditItemButton(item)}
+                key={fruit.id}
+                onClick={() => handleClickOpenEditItemButton(fruit)}
               >
-                {item}
+                {fruit.name}
               </Item>
             ))}
             <IconButton

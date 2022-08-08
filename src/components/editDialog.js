@@ -7,19 +7,31 @@ import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 import Container from "@mui/material/Container";
 import { useState } from "react";
+import { editFruit } from "../functions";
 
 export default function EditDialog(props) {
   const { data, onClose, open } = props;
   const [imageFile, setImageFile] = useState(null)
-
+  const [fruit, setFruit] = useState({name:data.name, image:''})
   const handleClose = () => { 
     onClose(false);
   };
 
+  const handleChangeName = (e) => {
+    setFruit({ ...fruit, name: e.target.value })
+  }
+  
   const handleChangeImage = (event) => {
     setImageFile(URL.createObjectURL(event.target.files[0]))
   }
-  
+
+  const onSubmitEditHandler = async (e) => {
+    e.preventDefault();
+    console.log(data._id)
+    console.log(fruit)
+    const result = await editFruit(data._id, fruit);
+    onClose(false)
+  };
   return (
     <>
       <Dialog
@@ -38,7 +50,8 @@ export default function EditDialog(props) {
               id="name"
               label="Name"
               variant="outlined"
-              value={data}
+              value={fruit.name}
+              onChange={handleChangeName}
             />
             <Button
               fullWidth
@@ -61,6 +74,14 @@ export default function EditDialog(props) {
             src={imageFile}
             style={{ width: "100%", height: "60%", alignContent: "center" }}
           />
+          <Button
+            variant="contained"
+            onClick={onSubmitEditHandler}
+            sx={{ marginTop: "20px" }}
+            fullWidth
+          >
+            Update
+          </Button>
         </Container>
       </Dialog>
     </>

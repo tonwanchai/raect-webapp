@@ -5,18 +5,29 @@ import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
-import Container from '@mui/material/Container';
-import { useState } from 'react'
+import Container from "@mui/material/Container";
+import { useState } from "react";
+import FileBase64 from "react-file-base64";
+import { createFruit } from "../functions";
 export default function AddDialog(props) {
+  const [fruit, setFruit] = useState({ name: "", image: "" });
   const { open, onClose } = props;
-  const [imageFile, setImageFile] = useState(null)
-  const handleClose = () => { 
+  const [imageFile, setImageFile] = useState(null);
+  const handleClose = () => {
     onClose(false);
   };
 
-  const handleChangeImage = (event) => {
-    setImageFile(URL.createObjectURL(event.target.files[0]))
-  }
+  const onSubmitHandler = async (e) => {
+    e.preventDefault();
+    const result = await createFruit(fruit);
+    onClose(false)
+  };
+
+  const handleChangeImage = (event, { base64 }) => {
+    setImageFile(URL.createObjectURL(event.target.files[0]));
+    setFruit({ ...fruit, image: base64 });
+  };
+
   return (
     <>
       <Dialog
@@ -28,21 +39,46 @@ export default function AddDialog(props) {
       >
         <Container>
           <DialogContent>
-            <br/>
+            <br />
             <TextField
               autoFocus
               fullWidth
               id="name"
               label="Name"
               variant="outlined"
+              onChange={(e) => setFruit({ ...fruit, name: e.target.value })}
             />
-            <Button fullWidth sx={{marginTop:'20px'}} size="large" component="label" variant="contained">
+            <Button
+              fullWidth
+              sx={{ marginTop: "20px" }}
+              size="large"
+              component="label"
+              variant="contained"
+            >
               Upload Image
-              <input hidden accept="image/*" multiple type="file" onChange={handleChangeImage} /> 
+              <FileBase64
+                type="file"
+                multiple={false}
+                onDone={(e, { base64 }) => handleChangeImage}
+                hidden
+              />
             </Button>
           </DialogContent>
-          <img src={imageFile} style={{width:'100%', height:'60%', alignContent:'center'}}/>
-          <Button fullWidth sx={{marginTop:'20px'}} size="large" component="label" variant="contained"> Save </Button>
+          <img
+            src={imageFile}
+            style={{ width: "100%", height: "60%", alignContent: "center" }}
+          />
+          <Button
+            onClick={onSubmitHandler}
+            fullWidth
+            sx={{ marginTop: "20px" }}
+            size="large"
+            component="label"
+            variant="contained"
+          >
+            {" "}
+            Save{" "}
+          </Button>
         </Container>
       </Dialog>
     </>

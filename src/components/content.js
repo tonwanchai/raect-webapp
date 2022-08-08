@@ -36,7 +36,7 @@ export default function Content() {
       .catch((err) => {
         setError(err)
       })
-  },[0])
+  },[])
 
   const handleClickOpenCheckButton = (event) => {
     setOpenCheckButton(true);
@@ -73,7 +73,7 @@ export default function Content() {
 
   return (
     <>
-      {data[0].name}
+      {/* {data[0].name} */}
       <Button variant="contained" onClick={handleClickOpenCheckButton}>Check</Button>
       <br/>
       <Box textAlign='center'>
