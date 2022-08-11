@@ -21,6 +21,7 @@ export default function AddDialog(props) {
     e.preventDefault();
     const result = await createFruit(fruit);
     onClose(false)
+    window.location.reload()
   };
 
   const handleChangeImage = (event, { base64 }) => {
@@ -56,10 +57,11 @@ export default function AddDialog(props) {
               variant="contained"
             >
               Upload Image
-              <FileBase64
+              <input
+                accept="image/*"
+                id="raised-button-file"
+                multiple
                 type="file"
-                multiple={false}
-                onDone={(e, { base64 }) => handleChangeImage}
                 hidden
               />
             </Button>

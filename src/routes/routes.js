@@ -3,7 +3,7 @@ let mongoose = require("mongoose"),
   router = express.Router();
 
 let FruitSchema = require("../models/fruit");
-
+let FruitQueueSchema = require("../models/fruitQueue")
 router.route("/create-fruit").post((req, res, next) => {
   FruitSchema.create(req.body, (error, data) => {
     if (error) {
@@ -60,6 +60,28 @@ router.route("/delete-fruit/:id").delete((req, res, next) => {
       return next(error);
     } else {
       res.status(200).json({ msg: data });
+    }
+  });
+});
+
+router.route("/queue/create-queue").post((req, res, next) => {
+  FruitQueueSchema.create(req.body, (error, data) => {
+    if (error) {
+      console.log(error)
+      return next("error");
+    } else {
+      console.log(data);
+      res.json(data);
+    }
+  });
+});
+
+router.route("/queue").get((req, res) => {
+  FruitQueueSchema.find((error, data) => {
+    if (error) {
+      return next(error);
+    } else {
+      res.json(data);
     }
   });
 });

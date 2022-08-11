@@ -1,4 +1,12 @@
-import { Box, Button, IconButton, InputLabel, MenuItem, FormControl, Select } from "@mui/material";
+import {
+  Box,
+  Button,
+  IconButton,
+  InputLabel,
+  MenuItem,
+  FormControl,
+  Select,
+} from "@mui/material";
 import Paper from "@mui/material/Paper";
 import Stack from "@mui/material/Stack";
 import { styled } from "@mui/material/styles";
@@ -6,39 +14,52 @@ import { useState, useEffect } from "react";
 import AddBoxIcon from "@mui/icons-material/AddBox";
 import AddDialog from "./addDialog";
 import EditDialog from "./editDialog";
-import { createFruit, getFruits } from '../functions';
+import { createFruit, getFruits } from "../functions";
+import DeleteIcon from "@mui/icons-material/Delete";
+import { deleteFruit, getFruitQueue } from "../api";
+import { Redirect } from "react-router";
+import { set } from "mongoose";
+
+const ItemSelect = styled(Select)(({ theme }) => ({
+  backgroundColor: theme.palette.mode === "dark" ? "#1A2027" : "#fff",
+  ...theme.typography.body2,
+  padding: theme.spacing(1),
+  textAlign: "center",
+  marginTop: "5px",
+  width: "100%",
+  color: theme.palette.text.secondary,
+}));
 
 const Item = styled(Button)(({ theme }) => ({
   backgroundColor: theme.palette.mode === "dark" ? "#1A2027" : "#fff",
   ...theme.typography.body2,
   padding: theme.spacing(1),
   textAlign: "center",
+  marginTop: "5px",
+  width: "100%",
   color: theme.palette.text.secondary,
 }));
 export default function Setting(props) {
-  const [fruits, setFruits] = useState([])
-  const [fruit, setFruit] = useState({name: '', image: ''})
+  const [fruits, setFruits] = useState([]);
+  const [fruit, setFruit] = useState({ name: "", image: "" });
   const [openAddItem, setOpenAddItem] = useState(false);
   const [openEditItem, setOpenEditItem] = useState(false);
   const [selectedItem, setSelectedItem] = useState("");
-  const [addSelectBox, setAddSelectBox] = useState([])
-  const [loading, setLoading] = useState(false)
+  const [addSelectBox, setAddSelectBox] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [queue, setQueue] = useState([]);
   useEffect(() => {
     const fetchData = async () => {
-      const result = await getFruits();
-      console.log('fetch data;m', result)
-      setFruits(result)
-    }
-    fetchData()
-    setLoading(true)
-  }, [])
-
-  const onSubmitHandler = async (e) => {
-    e.preventDefault();
-    const result = await createFruit(fruit);
-
-    setFruits([...fruits, result]);
-  }
+      const fruitsData = await getFruits();
+      const queueData = await getFruitQueue();
+      console.log("fetch data;m", fruitsData);
+      console.log("fecth data", queueData.data);
+      setFruits(fruitsData);
+      setQueue(queueData.data);
+    };
+    fetchData();
+    setLoading(true);
+  }, []);
 
   const handleClickOpenAddItemButton = () => {
     setOpenAddItem(true);
@@ -58,12 +79,36 @@ export default function Setting(props) {
   };
 
   const handleClickAddSelectBox = () => {
-    setAddSelectBox([...addSelectBox, 
-      
-    ])
+    setAddSelectBox([...addSelectBox]);
+  };
+
+  const handleClickDeleteFruit = async (id) => {
+    const result = await deleteFruit(id);
+    window.location.reload();
+  };
+
+  const handleClickAddQueue = () => {
+    setQueue([...queue, { fruitID: "" }]);
+
+  };
+
+  const handleClickDeleteQueue = (index) => {
+    console.log(queue)
+    console.log(index)
+    let arrQueue = queue
+    arrQueue.splice(index,1)
+    console.log(arrQueue)
+    setQueue([...arrQueue])
   }
 
-  if(!loading) return <></>
+  const handleChangeSelectBox = (e,index) => {
+    let arrQueue = queue
+    arrQueue[index] = e.target.value
+    console.log(arrQueue[index], index)
+    setQueue([...arrQueue])
+  }
+
+  if (!loading) return <>loading</>;
   return (
     <>
       <Box sx={{ display: "flex", justifyContent: "space-between" }}>
@@ -71,17 +116,35 @@ export default function Setting(props) {
           <br />
           <Stack spacing={2} sx={{ width: "80%", margin: "auto" }}>
             {fruits.map((fruit) => (
-              <Item
-                key={fruit.id}
-                onClick={() => handleClickOpenEditItemButton(fruit)}
-              >
-                {fruit.name}
-              </Item>
+              <Box fullWidth sx={{ display: "flex" }}>
+                <Box sx={{ width: "90%" }}>
+                  <Item
+                    key={fruit._id}
+                    onClick={() => handleClickOpenEditItemButton(fruit)}
+                  >
+                    {fruit.name}
+                  </Item>
+                </Box>
+                <Box sx={{ width: "10%" }}>
+                  <IconButton
+                    color="error"
+                    disableFocusRipple
+                    disableTouchRipple
+                    aria-label="add"
+                    style={{ fontSize: 30, backgroundColor: "transparent" }}
+                    onClick={() => handleClickDeleteFruit(fruit._id)}
+                  >
+                    <DeleteIcon fontSize="inherit" />
+                  </IconButton>
+                </Box>
+              </Box>
             ))}
             <IconButton
+              disableFocusRipple
+              disableTouchRipple
               aria-label="add"
               color="primary"
-              style={{ fontSize: 30 }}
+              style={{ fontSize: 30, backgroundColor: "transparent" }}
               onClick={handleClickOpenAddItemButton}
             >
               <AddBoxIcon fontSize="inherit" />
@@ -92,32 +155,57 @@ export default function Setting(props) {
           <br />
 
           <Stack spacing={2} sx={{ width: "80%", margin: "auto" }}>
-            {addSelectBox.map((selectBox) => (
-              <FormControl sx={{ m: 1, minWidth: 120 }} size="small">
-                <Select
-                  labelId="demo-select-small"
-                  id="demo-select-small"
-                >
-                  <MenuItem value="">
-                    <em>None</em>
-                  </MenuItem>
-                  <MenuItem value={10}>Ten</MenuItem>
-                  <MenuItem value={20}>Twenty</MenuItem>
-                  <MenuItem value={30}>Thirty</MenuItem>
-                </Select>
-             </FormControl>
+            {queue.map((data, index) => (
+              <Box fullWidth sx={{ display: "flex" }}>
+                <Box sx={{ width: "90%" }}>
+                  <FormControl fullWidth>
+                    <InputLabel id="demo-simple-select-label">
+                      {index + 1}
+                    </InputLabel>
+                    <Select
+                      labelId="fruit-queue"
+                      id={data._id}
+                      defaultValue={data.fruitID}
+                      label="Fruit name"
+                      onChange={(e) => handleChangeSelectBox(e, index)}
+                    >
+                      {fruits.map((fruit) => (
+                        <MenuItem value={fruit._id}>{fruit.name}</MenuItem>
+                      ))}
+                    </Select>
+                  </FormControl>
+                </Box>
+                <Box sx={{ width: "10%" }}>
+                  <IconButton
+                    color="error"
+                    disableFocusRipple
+                    disableTouchRipple
+                    aria-label="add"
+                    style={{ fontSize: 30, backgroundColor: "transparent" }}
+                    onClick={() => handleClickDeleteQueue(index)}
+                  >
+                    <DeleteIcon fontSize="inherit" />
+                  </IconButton>
+                </Box>
+              </Box>
+              // <></>
             ))}
             <IconButton
+              disableFocusRipple
+              disableTouchRipple
               aria-label="add"
               color="primary"
-              style={{ fontSize: 30 }}
+              onClick={handleClickAddQueue}
+              style={{ fontSize: 30, backgroundColor: "transparent" }}
             >
               <AddBoxIcon fontSize="inherit" />
             </IconButton>
           </Stack>
-          <Box sx={{width: '100%', margin:"auto", display:'flex'}}>
-            <Button variant="contained">Confirm</Button>
-            <Button variant="contained">Delete All</Button>
+          <Box sx={{ width: "100%", display: "flex" }}>
+            <Box sx={{ margin: "auto" }}>
+              <Button variant="contained">Confirm</Button>
+              <Button variant="contained">Delete All</Button>
+            </Box>
           </Box>
         </Box>
       </Box>

@@ -25,3 +25,31 @@ export const editFruit = async(id, todo)=>{
          console.log(error)
     }
 }
+
+export const deleteFruit = async(id)=>{
+    try {
+        const {data} = await api.deleteFruit(id);
+        return data
+    } catch (error) {
+         console.log(error)
+    }
+}
+
+export const getFruitQueue = async()=>{
+    try {
+        const {data} = await api.getFruitQueue();
+        return data
+    } catch (error) {
+         console.log(error)
+    }
+}
+
+export const createFruitQueue = async()=>{
+    try {
+        const {data} = await api.createFruitQueue();
+        return data
+    } catch (error) {
+         console.log(error)
+    }
+}
+
