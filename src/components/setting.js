@@ -16,19 +16,7 @@ import AddDialog from "./addDialog";
 import EditDialog from "./editDialog";
 import { createFruit, getFruits } from "../functions";
 import DeleteIcon from "@mui/icons-material/Delete";
-import { deleteFruit, getFruitQueue } from "../api";
-import { Redirect } from "react-router";
-import { set } from "mongoose";
-
-const ItemSelect = styled(Select)(({ theme }) => ({
-  backgroundColor: theme.palette.mode === "dark" ? "#1A2027" : "#fff",
-  ...theme.typography.body2,
-  padding: theme.spacing(1),
-  textAlign: "center",
-  marginTop: "5px",
-  width: "100%",
-  color: theme.palette.text.secondary,
-}));
+import { deleteFruit, getFruitQueue, createFruitQueue, createQueue, deleteQueueByID, deleteAllQueue } from "../api";
 
 const Item = styled(Button)(({ theme }) => ({
   backgroundColor: theme.palette.mode === "dark" ? "#1A2027" : "#fff",
@@ -39,6 +27,7 @@ const Item = styled(Button)(({ theme }) => ({
   width: "100%",
   color: theme.palette.text.secondary,
 }));
+
 export default function Setting(props) {
   const [fruits, setFruits] = useState([]);
   const [fruit, setFruit] = useState({ name: "", image: "" });
@@ -48,6 +37,7 @@ export default function Setting(props) {
   const [addSelectBox, setAddSelectBox] = useState([]);
   const [loading, setLoading] = useState(false);
   const [queue, setQueue] = useState([]);
+
   useEffect(() => {
     const fetchData = async () => {
       const fruitsData = await getFruits();
@@ -103,9 +93,25 @@ export default function Setting(props) {
 
   const handleChangeSelectBox = (e,index) => {
     let arrQueue = queue
-    arrQueue[index] = e.target.value
+    arrQueue[index].fruitID = e.target.value
     console.log(arrQueue[index], index)
     setQueue([...arrQueue])
+
+  }
+
+  const handleClickConfirm = async() => {
+    const result = createQueue(queue)
+    window.location.reload();
+  }
+
+  const handleClickDeleteWithIndex = async(id) => {
+    const result = deleteQueueByID(id)
+    window.location.reload();
+  }
+
+  const handleClickDeleteAll = () => {
+    const result = deleteAllQueue()
+    window.location.reload();
   }
 
   if (!loading) return <>loading</>;
@@ -159,13 +165,15 @@ export default function Setting(props) {
               <Box fullWidth sx={{ display: "flex" }}>
                 <Box sx={{ width: "90%" }}>
                   <FormControl fullWidth>
-                    <InputLabel id="demo-simple-select-label">
+                    <InputLabel sx={{marginTop: "5px"}} id="demo-simple-select-label">
                       {index + 1}
                     </InputLabel>
                     <Select
                       labelId="fruit-queue"
                       id={data._id}
-                      defaultValue={data.fruitID}
+                      value={data.fruitID}
+                      sx={{marginTop: "5px"}}
+                      size='small'
                       label="Fruit name"
                       onChange={(e) => handleChangeSelectBox(e, index)}
                     >
@@ -181,8 +189,9 @@ export default function Setting(props) {
                     disableFocusRipple
                     disableTouchRipple
                     aria-label="add"
-                    style={{ fontSize: 30, backgroundColor: "transparent" }}
-                    onClick={() => handleClickDeleteQueue(index)}
+                    style={{ fontSize: 30, backgroundColor: "transparent"}}
+                    // onClick={() => handleClickDeleteQueue(index)}
+                    onClick={()=>handleClickDeleteWithIndex(data._id)}
                   >
                     <DeleteIcon fontSize="inherit" />
                   </IconButton>
@@ -202,9 +211,9 @@ export default function Setting(props) {
             </IconButton>
           </Stack>
           <Box sx={{ width: "100%", display: "flex" }}>
-            <Box sx={{ margin: "auto" }}>
-              <Button variant="contained">Confirm</Button>
-              <Button variant="contained">Delete All</Button>
+            <Box sx={{ margin: "auto", marginTop: '5px' }}>
+              <Button variant="contained" onClick={handleClickConfirm}>Confirm</Button>
+              <Button variant="contained" onClick={handleClickDeleteAll}>Delete All</Button>
             </Box>
           </Box>
         </Box>

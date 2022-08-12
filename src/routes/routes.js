@@ -65,6 +65,7 @@ router.route("/delete-fruit/:id").delete((req, res, next) => {
 });
 
 router.route("/queue/create-queue").post((req, res, next) => {
+  console.log(res.body)
   FruitQueueSchema.create(req.body, (error, data) => {
     if (error) {
       console.log(error)
@@ -85,5 +86,52 @@ router.route("/queue").get((req, res) => {
     }
   });
 });
+
+router.route("/queue/update").post((req, res, next) => {
+  let data = req.body
+  console.log(req.body)
+  data.forEach((d) => {
+    if (d['_id']){
+      FruitQueueSchema.findByIdAndUpdate(
+        d._id,
+        {
+          $set: d,
+        },
+        (error, data) => {
+          if (error) {
+            console.log(error);
+            return next(error);
+          } else {
+            console.log("fruit successfully updated");
+          }
+        }
+      );
+    }else{
+      FruitQueueSchema.create(d, (error, data) => {
+        if (error) {
+          console.log(error)
+          return next("error");
+        } else {
+          console.log(data);
+        }
+      });
+    }
+  })
+})
+
+router.route("/queue/delete/:id").delete((req, res, next) => {
+  FruitQueueSchema.findByIdAndRemove(req.params.id, (error, data) => {
+    if (error) {
+      return next(error);
+    } else {
+      console.log("Delete successfully")
+      res.status(200).json({ msg: data });
+    }
+  });
+})
+
+router.route("/queue/delete-all/").delete((req, res, next) => {
+  FruitQueueSchema.deleteMany({}).then(() => console.log("Data deleted")).catch((error) => console.log(error) );
+})
 
 module.exports = router;
