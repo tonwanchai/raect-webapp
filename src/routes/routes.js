@@ -2,8 +2,11 @@ let mongoose = require("mongoose"),
   express = require("express"),
   router = express.Router();
 
+const { default: next } = require("next");
 let FruitSchema = require("../models/fruit");
 let FruitQueueSchema = require("../models/fruitQueue")
+let CartSchema = require("../models/cart")
+
 router.route("/create-fruit").post((req, res, next) => {
   FruitSchema.create(req.body, (error, data) => {
     if (error) {
@@ -109,7 +112,6 @@ router.route("/queue/update").post((req, res, next) => {
     }else{
       FruitQueueSchema.create(d, (error, data) => {
         if (error) {
-          console.log(error)
           return next("error");
         } else {
           console.log(data);
@@ -124,7 +126,7 @@ router.route("/queue/delete/:id").delete((req, res, next) => {
     if (error) {
       return next(error);
     } else {
-      console.log("Delete successfully")
+      console.log("Delete Queue successfully")
       res.status(200).json({ msg: data });
     }
   });
@@ -132,6 +134,36 @@ router.route("/queue/delete/:id").delete((req, res, next) => {
 
 router.route("/queue/delete-all/").delete((req, res, next) => {
   FruitQueueSchema.deleteMany({}).then(() => console.log("Data deleted")).catch((error) => console.log(error) );
+})
+
+router.route("/cart").get((req, res) => {
+  console.log("In get Cart route.")
+  CartSchema.find((error, data) => {
+    console.log("Data :", data)
+    if (error) {
+      return next(error);
+    } else {
+      res.json(data);
+    }
+  });
+})
+
+router.route("/cart/create").post((req, res, next) => {
+  console.log("create cart route.")
+  console.log(req.body)
+  CartSchema.create(req.body, (error, data) => {
+    if (error) {
+      console.log(error)
+      return next("error");
+    } else {
+      console.log(data);
+      res.json(data);
+    }
+  })
+})
+
+router.route("/cart/delete").delete((req, res, next) => {
+  CartSchema.deleteMany({}).then(() => console.log("Data deleted")).catch((error) => console.log(error) )
 })
 
 module.exports = router;

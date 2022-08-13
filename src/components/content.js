@@ -9,6 +9,8 @@ import { makeStyles } from '@mui/material/styles';
 import BoxDialog from './boxDialog'
 import CartDialog from './cartDialog'
 import axios from 'axios'
+import { useEffect, useState } from 'react';
+import { getFruits, getFruitQueue, deleteQueueByID, createCart, getCart } from '../functions'
 
 const baseURL = 'http://localhost:5000/fruit/'
 const client =  axios.create({
@@ -22,21 +24,29 @@ export default function Content() {
   const [dataFromQueue, setDataFromQueue] = React.useState('Apple')
   const [dataFromRandom, setDataFromRandom] = React.useState([])
   const [anchorEl, setAnchorEl] = React.useState(null)
-  const [data, setData] = React.useState(null)
-  const [error, setError] = React.useState(null)
-
-  React.useEffect(() => {
-    client
-      .get()
-      .then((res) => {
-        setData(res.data)
-        console.log(res)
-        console.log(res.data)
+  const [loading, setLoading] = useState(false);
+  const [fruits, setFruits] = useState([]);
+  const [queue, setQueue] = useState([]);
+  const [dataCart, setDataCart] = useState([])
+  const [nameFruitInQueue, setNameFruitInQueue] = useState([])
+  useEffect(() => {
+    const fetchData = async () => {
+      const fruitsData = await getFruits();
+      const queueData = await getFruitQueue();
+      let getNameFromQueue = []
+      console.log("fetch data;m", fruitsData);
+      console.log("fecth data", queueData);
+      setFruits(fruitsData);
+      queueData.forEach((data) => {
+        getNameFromQueue.push(fruitsData.filter((fruit) => fruit._id === data.fruitID))
       })
-      .catch((err) => {
-        setError(err)
-      })
-  },[])
+      getNameFromQueue = getNameFromQueue.flat()
+      setNameFruitInQueue(getNameFromQueue)
+      setQueue(queueData);
+    };
+    fetchData();
+    setLoading(true);
+  }, []);
 
   const handleClickOpenCheckButton = (event) => {
     setOpenCheckButton(true);
@@ -48,20 +58,35 @@ export default function Content() {
     setAnchorEl(null);
   };
 
-  const handleClickOpenBoxButton = (event) => {
-    setOpenBoxButton(true);
+  const handleClickOpenBoxButton = async (event) => {
+    let getFirstFruit = [];
+    if (nameFruitInQueue.length > 0){
+      console.log(queue)
+      setOpenBoxButton(true);
+      let dataQueue = queue.shift()
+      getFirstFruit = nameFruitInQueue.shift()
+      setDataFromQueue(getFirstFruit)
+      setQueue([...queue])
+      const deleteQueue = await deleteQueueByID(dataQueue._id)
+      const create = await createCart({name: getFirstFruit.name})
+    }
+
+    // คลิกกล่อง
+    // เอาค่าแรกจากคิวมาแสดงและลบออกจากคิว
+
     //Set data from queue to dataFromQueue
     //Update data in queue
     //Push data after random to dataFromRandom  >>>>>> oldArray => [...oldArray, newElement]
     //Cart data need to use Database too
-    setDataFromRandom(dataFromRandom => [...dataFromRandom, dataFromQueue])
+    setDataCart(dataCart => [...dataCart, getFirstFruit])
   };
 
   const handleCloseBoxButton = () => {
     setOpenBoxButton(false);
   };
 
-  const handleClickOpenCartButton = () => {
+  const handleClickOpenCartButton = async() => {
+    
     setOpenCartButton(true);
   };
 
@@ -69,11 +94,10 @@ export default function Content() {
     setOpenCartButton(false);
   };
   
-  if(!data) return <></>
+  if(!loading) return <></>
 
   return (
     <>
-      {/* {data[0].name} */}
       <Button variant="contained" onClick={handleClickOpenCheckButton}>Check</Button>
       <br/>
       <Box textAlign='center'>
@@ -114,7 +138,8 @@ export default function Content() {
         <CartDialog
           open={openCartButton}
           onClose={handleCloseCartButton}
-          data={dataFromRandom}
+          data={dataCart}
+          stateChanger={setDataCart}
         />
       }
     </>

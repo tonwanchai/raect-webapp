@@ -53,7 +53,7 @@ export const createFruitQueue = async () => {
   }
 };
 
-export const deleteQueue = async () => {
+export const createQueue = async () => {
   try {
     const { data } = await api.createQueue();
     return data;
@@ -77,5 +77,43 @@ export const deleteAllQueue = async (id) => {
     return data;
   } catch (error) {
     console.log(error);
+  }
+}
+
+export const getQueueAndFruitData = async() => {
+  try{
+    const { fruitData } = await api.getFruits()
+    const { queueData } = await api.getFruitQueue()
+    return fruitData
+  } catch (error) {
+    console.log(error)
+  }
+}
+
+export const getCart = async() => {
+  try{
+    const { cartData } = await api.getCart()
+    console.log( "In API file : ", cartData )
+    return cartData
+  } catch (error) {
+    console.log(error)
+  }
+}
+
+export const createCart = async(data) => {
+  try {
+    const { cartData } = await api.createCart(data)
+    return cartData
+  } catch (error){
+    console.log(error)
+  }
+}
+
+export const deleteAllCart = async() => {
+  try {
+    const { result } = await api.deleteAllCart()
+    return result
+  } catch (error) {
+    console.log(error)
   }
 }

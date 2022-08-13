@@ -9,3 +9,6 @@ export const createFruitQueue = (queue)=>axios.post(`${url}/queue/create-queue`,
 export const createQueue = (queue)=>axios.post(`${url}/queue/update`, queue)
 export const deleteQueueByID = (id)=>axios.delete(`${url}/queue/delete/${id}`)
 export const deleteAllQueue = ()=>axios.delete(`${url}/queue/delete-all`)
+export const getCart = ()=>axios.get(`${url}/cart`)
+export const deleteAllCart = ()=> axios.delete(`${url}/cart/delete`)
+export const createCart = (data)=> axios.post(`${url}/cart/create`, data)

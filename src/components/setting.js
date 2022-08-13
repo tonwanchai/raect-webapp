@@ -100,6 +100,7 @@ export default function Setting(props) {
   }
 
   const handleClickConfirm = async() => {
+    console.log("create queue", queue)
     const result = createQueue(queue)
     window.location.reload();
   }

@@ -6,19 +6,20 @@ import { Box, Button } from "@mui/material";
 import { useState, useEffect } from "react";
 import ListItem from "@mui/material/ListItem";
 import ListItemText from "@mui/material/ListItemText";
-
+import { getCart, deleteAllCart } from "../functions/index"
 export default function CartDialog(props) {
-  const { data, onClose, open } = props;
-  const [dataInCart, setDataInCart] = useState(data);
+  const { onClose, data, open, stateChanger } = props;
+  const [loading, setLoading] = useState(false)
+  const [dataCart, setDataCart] = useState(data)
 
   const handleClose = () => {
     onClose(false);
   };
 
-  const clearData = () => {
-    console.log(data)
-    setDataInCart([]);
-  };
+  const handleClickClear = () => {
+    setDataCart([])
+    stateChanger([])
+  }
 
   return (
     <>
@@ -34,16 +35,16 @@ export default function CartDialog(props) {
             id="alert-dialog-description"
             sx={{marginTop: "2rem" }}
           >
-            {dataInCart.map((data) => (
-              <ListItem key={data}>
-                <ListItemText primary={data} />
+            {dataCart.map((data) => (
+              <ListItem key={data._id}>
+                <ListItemText primary={data.name} />
               </ListItem>
             ))}
           </DialogContentText>
         </DialogContent>
         <DialogActions>
           <Box textAlign="center">
-            <Button onClick={clearData} variant="contained">
+            <Button onClick={() => handleClickClear()} variant="contained">
               Clear
             </Button>
           </Box>

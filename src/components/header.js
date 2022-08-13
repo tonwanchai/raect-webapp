@@ -22,7 +22,7 @@ function Header(props) {
 
   const handleButtonClick = pageURL => {
     history.push(pageURL);
-
+    window.location.reload()
   };
 
   return (

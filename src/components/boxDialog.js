@@ -22,7 +22,7 @@ export default function BoxDialog(props) {
       >
         <DialogContent>
           <DialogContentText id="alert-dialog-description" sx={{textAlign:'center', marginTop:'2rem', fontSize:'48px'}}>
-            {data}
+            {data.name}
           </DialogContentText>
         </DialogContent>
         <DialogActions>
