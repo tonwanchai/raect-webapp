@@ -120,7 +120,7 @@ router.route("/queue/update").post((req, res, next) => {
     }
   })
 })
-
+// test
 router.route("/queue/delete/:id").delete((req, res, next) => {
   FruitQueueSchema.findByIdAndRemove(req.params.id, (error, data) => {
     if (error) {
