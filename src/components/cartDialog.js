@@ -10,7 +10,7 @@ import { getCart, deleteAllCart } from "../functions/index"
 export default function CartDialog(props) {
   const { onClose, data, open, stateChanger } = props;
   const [loading, setLoading] = useState(false)
-  const [dataCart, setDataCart] = useState(data)
+  const [dataCart, setDataCart] = useState((data === null)? []:data)
 
   const handleClose = () => {
     onClose(false);

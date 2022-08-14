@@ -79,7 +79,7 @@ export default function Content() {
       const deleteQueue = await deleteQueueByID(dataQueue._id)
       // const create = await createCart({name: getFirstFruit.name})
       if (localStorage.getItem('cart') === null) {
-        let dataInCart = [{name: getFirstFruit.name}]
+        let dataInCart = (getFirstFruit.name) ? ([{name: getFirstFruit.name}]):([])
         localStorage.setItem('cart', JSON.stringify(dataInCart))  
       } else{
         let dataInCart = JSON.parse(localStorage.getItem('cart'))
