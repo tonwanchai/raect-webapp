@@ -2,7 +2,7 @@ import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
-import { Box, Button } from "@mui/material";
+import { Box, Button, Typography } from "@mui/material";
 import { useState, useEffect } from "react";
 import ListItem from "@mui/material/ListItem";
 import ListItemText from "@mui/material/ListItemText";
@@ -18,7 +18,8 @@ export default function CartDialog(props) {
 
   const handleClickClear = () => {
     setDataCart([])
-    stateChanger([])
+    localStorage.removeItem('cart')
+    // stateChanger([])
   }
 
   return (
@@ -37,7 +38,7 @@ export default function CartDialog(props) {
           >
             {dataCart.map((data) => (
               <ListItem key={data._id}>
-                <ListItemText primary={data.name} />
+                <ListItemText disableTypography primary={<Typography fontSize={30}>{data.name}</Typography>} />
               </ListItem>
             ))}
           </DialogContentText>

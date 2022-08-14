@@ -2,7 +2,7 @@ let mongoose = require("mongoose"),
   express = require("express"),
   router = express.Router();
 
-const { default: next } = require("next");
+//const { default: next } = require("next");
 let FruitSchema = require("../models/fruit");
 let FruitQueueSchema = require("../models/fruitQueue")
 let CartSchema = require("../models/cart")
@@ -136,7 +136,7 @@ router.route("/queue/delete-all/").delete((req, res, next) => {
   FruitQueueSchema.deleteMany({}).then(() => console.log("Data deleted")).catch((error) => console.log(error) );
 })
 
-router.route("/cart").get((req, res) => {
+router.route("/cart").get((req, res, next) => {
   console.log("In get Cart route.")
   CartSchema.find((error, data) => {
     console.log("Data :", data)

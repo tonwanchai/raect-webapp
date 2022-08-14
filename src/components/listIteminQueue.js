@@ -8,23 +8,17 @@ import ListItemAvatar from "@mui/material/ListItemAvatar";
 import ListItemText from "@mui/material/ListItemText";
 import DialogTitle from "@mui/material/DialogTitle";
 import Dialog from "@mui/material/Dialog";
-import PersonIcon from "@mui/icons-material/Person";
+import FolderIcon from '@mui/icons-material/Folder';
 import AddIcon from "@mui/icons-material/Add";
 import Typography from "@mui/material/Typography";
 import { blue } from "@mui/material/colors";
 import Popover from '@mui/material/Popover';
 import Box from '@mui/material/Box'
 export default function ListItemInQueue(props) {
-  const [listItem, setListItem] = useState([
-    ['apple', 10],
-    ['banana', 10],
-    ['orange', 10],
-    ['mango', 10],
-    ['pineapple', 10]
-  ]);
   const [Items, setItems] = useState({})
-  const { onClose, open, anchorEl } = props;
-
+  const { onClose, open, anchorEl, data } = props;
+  const [listItem, setListItem] = useState(data);
+  
   const handleClose = () => {
     onClose(false);
   };
@@ -33,7 +27,7 @@ export default function ListItemInQueue(props) {
   return (
     <>
       <Popover 
-        onClose={handleClose} 
+        onClose={() => handleClose()} 
         open={open} 
         anchorEl={anchorEl}
         anchorOrigin={{
@@ -50,9 +44,7 @@ export default function ListItemInQueue(props) {
               key={item[0]}
             >
               <ListItemAvatar>
-                <Avatar sx={{ bgcolor: blue[100], color: blue[600] }}>
-                  <PersonIcon />
-                </Avatar>
+                  <FolderIcon />
               </ListItemAvatar>
               <ListItemText primary={item[0]+" "+item[1]} />
             </ListItem>

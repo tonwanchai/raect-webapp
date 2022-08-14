@@ -17,6 +17,7 @@ import EditDialog from "./editDialog";
 import { createFruit, getFruits } from "../functions";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { deleteFruit, getFruitQueue, createFruitQueue, createQueue, deleteQueueByID, deleteAllQueue } from "../api";
+import { useHistory } from 'react-router-dom'
 
 const Item = styled(Button)(({ theme }) => ({
   backgroundColor: theme.palette.mode === "dark" ? "#1A2027" : "#fff",
@@ -37,6 +38,7 @@ export default function Setting(props) {
   const [addSelectBox, setAddSelectBox] = useState([]);
   const [loading, setLoading] = useState(false);
   const [queue, setQueue] = useState([]);
+  const history = useHistory()
 
   useEffect(() => {
     const fetchData = async () => {
@@ -115,11 +117,21 @@ export default function Setting(props) {
     window.location.reload();
   }
 
+  const handleButtonBack = pageURL => {
+    history.push(pageURL);
+    window.location.reload()
+  };
+
+
   if (!loading) return <>loading</>;
   return (
     <>
+      {/* <Box>
+        <Button size="large" onClick={() =>handleButtonBack('/')}>{"<==="}</Button>
+      </Box> */}
+      <br/>
       <Box sx={{ display: "flex", justifyContent: "space-between" }}>
-        <Box sx={{ border: "1px dashed grey", width: "45%", height: 824 }}>
+        <Box sx={{ border: "1px line grey", backgroundColor:'#d9d9d9', width: "45%", height: 824 }}>
           <br />
           <Stack spacing={2} sx={{ width: "80%", margin: "auto" }}>
             {fruits.map((fruit) => (
@@ -158,7 +170,7 @@ export default function Setting(props) {
             </IconButton>
           </Stack>
         </Box>
-        <Box sx={{ border: "1px dashed grey", width: "45%", height: 824 }}>
+        <Box sx={{ backgroundColor:'#d9d9d9', width: "45%", height: 824 }}>
           <br />
 
           <Stack spacing={2} sx={{ width: "80%", margin: "auto" }}>
@@ -166,14 +178,14 @@ export default function Setting(props) {
               <Box fullWidth sx={{ display: "flex" }}>
                 <Box sx={{ width: "90%" }}>
                   <FormControl fullWidth>
-                    <InputLabel sx={{marginTop: "5px"}} id="demo-simple-select-label">
+                    <InputLabel sx={{marginTop: "5px", backgroundColor:'transparent'}} id="demo-simple-select-label">
                       {index + 1}
                     </InputLabel>
                     <Select
                       labelId="fruit-queue"
                       id={data._id}
                       value={data.fruitID}
-                      sx={{marginTop: "5px"}}
+                      sx={{marginTop: "5px", backgroundColor:'#FFFFFF'}}
                       size='small'
                       label="Fruit name"
                       onChange={(e) => handleChangeSelectBox(e, index)}
@@ -212,8 +224,9 @@ export default function Setting(props) {
             </IconButton>
           </Stack>
           <Box sx={{ width: "100%", display: "flex" }}>
-            <Box sx={{ margin: "auto", marginTop: '5px' }}>
+            <Box sx={{ margin: "auto", marginTop: '5px' }} fullWidth>
               <Button variant="contained" onClick={handleClickConfirm}>Confirm</Button>
+              {" "}
               <Button variant="contained" onClick={handleClickDeleteAll}>Delete All</Button>
             </Box>
           </Box>

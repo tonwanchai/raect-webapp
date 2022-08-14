@@ -9,13 +9,14 @@ export default function BoxDialog(props) {
 
   const handleClose = () => {
     onClose(false);
+    window.location.reload()
   };
 
   return (
     <>
       <Dialog
         open={open}
-        onClose={handleClose}
+        onClose={() => handleClose()}
         PaperProps={{
           style: { width: '50%',height: '400px' },
         }}

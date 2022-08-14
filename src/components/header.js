@@ -25,6 +25,11 @@ function Header(props) {
     window.location.reload()
   };
 
+  // const handleButtonBack = pageURL => {
+  //   history.push(pageURL);
+  //   window.location.reload()
+  // };
+
   return (
     <React.Fragment>
       <AppBar
@@ -40,9 +45,9 @@ function Header(props) {
               variant="contained"
               size="large"
               sx={{ margin: "10px", bgcolor: "#c1c1c1" }}
-              onClick={() => handleButtonClick("/setting")}
+              onClick={() => handleButtonClick(window.location.pathname == '/' ? "/setting":"/")}
             >
-              Setting
+              {window.location.pathname == '/' ? "Setting":"Home"}
             </Button>
           </Tooltip>
         </Toolbar>

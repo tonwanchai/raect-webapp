@@ -29,10 +29,13 @@ export default function Content() {
   const [queue, setQueue] = useState([]);
   const [dataCart, setDataCart] = useState([])
   const [nameFruitInQueue, setNameFruitInQueue] = useState([])
-  useEffect(() => {
+  const [listItem, setListItem] = useState([{name:'',count:0}])
+  useEffect(() => { 
     const fetchData = async () => {
       const fruitsData = await getFruits();
       const queueData = await getFruitQueue();
+      const cartData = await getCart();
+      setDataCart(cartData)
       let getNameFromQueue = []
       console.log("fetch data;m", fruitsData);
       console.log("fecth data", queueData);
@@ -42,7 +45,13 @@ export default function Content() {
       })
       getNameFromQueue = getNameFromQueue.flat()
       setNameFruitInQueue(getNameFromQueue)
+      let items  = []
+      fruitsData.forEach((fruit) => items.push([fruit.name, queueData.filter((queue) => queue.fruitID === fruit._id).length]))
+      items = items.filter((item) => item[1] !== 0)
+      console.log(items)
+      setListItem(items)
       setQueue(queueData);
+      console.log(cartData)
     };
     fetchData();
     setLoading(true);
@@ -68,7 +77,16 @@ export default function Content() {
       setDataFromQueue(getFirstFruit)
       setQueue([...queue])
       const deleteQueue = await deleteQueueByID(dataQueue._id)
-      const create = await createCart({name: getFirstFruit.name})
+      // const create = await createCart({name: getFirstFruit.name})
+      if (localStorage.getItem('cart') === null) {
+        let dataInCart = [{name: getFirstFruit.name}]
+        localStorage.setItem('cart', JSON.stringify(dataInCart))  
+      } else{
+        let dataInCart = JSON.parse(localStorage.getItem('cart'))
+        dataInCart.push({name: getFirstFruit.name})
+        localStorage.setItem('cart', JSON.stringify(dataInCart))
+      }
+      // localStorage.setItem(cart, ) 
     }
 
     // คลิกกล่อง
@@ -78,7 +96,7 @@ export default function Content() {
     //Update data in queue
     //Push data after random to dataFromRandom  >>>>>> oldArray => [...oldArray, newElement]
     //Cart data need to use Database too
-    setDataCart(dataCart => [...dataCart, getFirstFruit])
+    // setDataCart(dataCart => [...dataCart, getFirstFruit])
   };
 
   const handleCloseBoxButton = () => {
@@ -125,6 +143,7 @@ export default function Content() {
           open={openCheckButton}
           onClose={handleCloseCheckButton}
           anchorEl={anchorEl}
+          data={listItem}
         />
       }
       {openBoxButton &&
@@ -138,8 +157,8 @@ export default function Content() {
         <CartDialog
           open={openCartButton}
           onClose={handleCloseCartButton}
-          data={dataCart}
           stateChanger={setDataCart}
+          data={JSON.parse(localStorage.getItem('cart'))}
         />
       }
     </>
