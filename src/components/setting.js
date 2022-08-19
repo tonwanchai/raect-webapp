@@ -16,7 +16,7 @@ import AddDialog from "./addDialog";
 import EditDialog from "./editDialog";
 import { createFruit, getFruits } from "../functions";
 import DeleteIcon from "@mui/icons-material/Delete";
-import { deleteFruit, getFruitQueue, createFruitQueue, createQueue, deleteQueueByID, deleteAllQueue } from "../api";
+import { deleteFruit, getFruitQueue, createFruitQueue, createQueue, deleteQueueByID, deleteAllQueue, updateQueueFruit } from "../api";
 import { useHistory } from 'react-router-dom'
 
 const Item = styled(Button)(({ theme }) => ({
@@ -76,12 +76,13 @@ export default function Setting(props) {
   };
 
   const handleClickDeleteFruit = async (id) => {
-    const result = await deleteFruit(id);
+    const result = deleteFruit(id);
+    const updateQueue = updateQueueFruit(id);
     window.location.reload();
   };
 
   const handleClickAddQueue = () => {
-    setQueue([...queue, { fruitID: "" }]);
+    setQueue([...queue, { fruitID: " " }]);
 
   };
 
@@ -138,6 +139,7 @@ export default function Setting(props) {
             {fruits.map((fruit) => (
               <Box fullWidth key={fruit._id} sx={{ display: "flex" }}>
                 <Box sx={{ width: "90%" }}>
+
                   <Item
                     key={fruit._id}
                     onClick={() => handleClickOpenEditItemButton(fruit)}
@@ -176,41 +178,43 @@ export default function Setting(props) {
 
           <Stack spacing={2} sx={{ width: "80%", margin: "auto" }}>
             {queue.map((data, index) => (
-              <Box fullWidth sx={{ display: "flex" }}>
-                <Box sx={{ width: "90%" }}>
-                  <FormControl fullWidth>
-                    <InputLabel sx={{marginTop: "5px", backgroundColor:'transparent'}} id="demo-simple-select-label">
-                      {index + 1}
-                    </InputLabel>
-                    <Select
-                      labelId="fruit-queue"
-                      id={data._id}
-                      value={data.fruitID}
-                      sx={{marginTop: "5px", backgroundColor:'#FFFFFF'}}
-                      size='small'
-                      label="Fruit name"
-                      onChange={(e) => handleChangeSelectBox(e, index)}
+              (data.fruitID !== "undefined") &&
+                <Box fullWidth sx={{ display: "flex" }}>
+                  <Box sx={{ width: "90%" }}>
+                    <FormControl fullWidth>
+                      <InputLabel sx={{marginTop: "5px", backgroundColor:'transparent'}} id="demo-simple-select-label">
+                        {index + 1}
+                      </InputLabel>
+                      <Select
+                        labelId="fruit-queue"
+                        id={data._id}
+                        value={data.fruitID}
+                        sx={{marginTop: "5px", backgroundColor:'#FFFFFF'}}
+                        size='small'
+                        label="Fruit name"
+                        onChange={(e) => handleChangeSelectBox(e, index)}
+                      >
+                        {fruits.map((fruit) => (
+                          <MenuItem value={fruit._id}>{fruit.name}</MenuItem>
+                        ))}
+                      </Select>
+                    </FormControl>
+                  </Box>
+                  <Box sx={{ width: "10%" }}>
+                    <IconButton
+                      color="error"
+                      disableFocusRipple
+                      disableTouchRipple
+                      aria-label="add"
+                      style={{ fontSize: 30, backgroundColor: "transparent"}}
+                      // onClick={() => handleClickDeleteQueue(index)}
+                      onClick={()=>handleClickDeleteWithIndex(data._id)}
                     >
-                      {fruits.map((fruit) => (
-                        <MenuItem value={fruit._id}>{fruit.name}</MenuItem>
-                      ))}
-                    </Select>
-                  </FormControl>
+                      <DeleteIcon fontSize="inherit" />
+                    </IconButton>
+                  </Box>
                 </Box>
-                <Box sx={{ width: "10%" }}>
-                  <IconButton
-                    color="error"
-                    disableFocusRipple
-                    disableTouchRipple
-                    aria-label="add"
-                    style={{ fontSize: 30, backgroundColor: "transparent"}}
-                    // onClick={() => handleClickDeleteQueue(index)}
-                    onClick={()=>handleClickDeleteWithIndex(data._id)}
-                  >
-                    <DeleteIcon fontSize="inherit" />
-                  </IconButton>
-                </Box>
-              </Box>
+              
               // <></>
             ))}
             <IconButton

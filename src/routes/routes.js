@@ -132,8 +132,18 @@ router.route("/queue/delete/:id").delete((req, res, next) => {
   });
 })
 
+router.route("/queue/update-fruit").put((req, res, next) => {
+  console.log(req.body)
+  if(Object.keys(req.body).length > 0){
+    FruitQueueSchema.deleteMany(req.body).then(() => console.log("Data deleted")).catch((error) => console.log(error) );
+  }else{
+    console.log("================= No data =================")
+  }
+})
+
 router.route("/queue/delete-all/").delete((req, res, next) => {
-  FruitQueueSchema.deleteMany({}).then(() => console.log("Data deleted")).catch((error) => console.log(error) );
+  console.log("body =====================>", (req.data))
+  FruitQueueSchema.deleteMany((Object.keys(req.body).length === 0)? {}:{fruitID:req.body}).then(() => console.log("Data deleted")).catch((error) => console.log(error) );
 })
 
 router.route("/cart").get((req, res, next) => {

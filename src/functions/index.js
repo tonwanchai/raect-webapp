@@ -71,9 +71,10 @@ export const deleteQueueByID = async (id) => {
   }
 };
 
-export const deleteAllQueue = async (id) => {
+export const deleteAllQueue = async (data) => {
+  console.log(data)
   try {
-    const { data } = await api.deleteAllQueue(id);
+    const { data } = await api.deleteAllQueue(data);
     return data;
   } catch (error) {
     console.log(error);
@@ -112,6 +113,15 @@ export const createCart = async(data) => {
 export const deleteAllCart = async() => {
   try {
     const { result } = await api.deleteAllCart()
+    return result
+  } catch (error) {
+    console.log(error)
+  }
+}
+
+export const updateQueueFruit = async(data) => {
+  try {
+    const { result } = await api.updateQueueFruit(data)
     return result
   } catch (error) {
     console.log(error)
