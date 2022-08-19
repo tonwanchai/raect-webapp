@@ -21,8 +21,20 @@ export default function EditDialog(props) {
     setFruit({ ...fruit, name: e.target.value })
   }
   
-  const handleChangeImage = (event) => {
-    setImageFile(URL.createObjectURL(event.target.files[0]))
+  const handleChangeImage = (e) => {
+    getBase64(e.target.files[0])
+    .then(result => {
+      // file["base64"] = result;
+      // console.log("File Is", file);
+      // this.setState({
+      //   base64URL: result,
+      //   file
+      // });
+      setFruit({...fruit, image: result})
+    })
+    .catch(err => {
+      console.log(err);
+    });
   }
 
   const onSubmitEditHandler = async (e) => {
@@ -32,6 +44,30 @@ export default function EditDialog(props) {
     const result = await editFruit(data._id, fruit);
     onClose(false)
   };
+
+  const getBase64 = file => {
+    return new Promise(resolve => {
+      let fileInfo;
+      let baseURL = "";
+      // Make new FileReader
+      let reader = new FileReader();
+
+      // Convert the file to base64 text
+      reader.readAsDataURL(file);
+
+      // on reader load somthing...
+      reader.onload = () => {
+        // Make a fileInfo Object
+        console.log("Called", reader);
+        baseURL = reader.result;
+        console.log(baseURL);
+        resolve(baseURL);
+      };
+      console.log(fileInfo);
+    });
+  };
+
+
   return (
     <>
       <Dialog
