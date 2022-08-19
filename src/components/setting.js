@@ -136,7 +136,7 @@ export default function Setting(props) {
           <br />
           <Stack spacing={2} sx={{ width: "80%", margin: "auto" }}>
             {fruits.map((fruit) => (
-              <Box fullWidth sx={{ display: "flex" }}>
+              <Box fullWidth key={fruit._id} sx={{ display: "flex" }}>
                 <Box sx={{ width: "90%" }}>
                   <Item
                     key={fruit._id}

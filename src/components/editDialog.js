@@ -12,7 +12,7 @@ import { editFruit } from "../functions";
 export default function EditDialog(props) {
   const { data, onClose, open } = props;
   const [imageFile, setImageFile] = useState(null)
-  const [fruit, setFruit] = useState({name:data.name, image:''})
+  const [fruit, setFruit] = useState({name:data.name, image:data.image})
   const handleClose = () => { 
     onClose(false);
   };
@@ -71,7 +71,7 @@ export default function EditDialog(props) {
             </Button>
           </DialogContent>
           <img
-            src={imageFile}
+            src={fruit.image}
             style={{ width: "100%", height: "60%", alignContent: "center" }}
           />
           <Button

@@ -17,6 +17,28 @@ export default function AddDialog(props) {
     onClose(false);
   };
 
+  const getBase64 = file => {
+    return new Promise(resolve => {
+      let fileInfo;
+      let baseURL = "";
+      // Make new FileReader
+      let reader = new FileReader();
+
+      // Convert the file to base64 text
+      reader.readAsDataURL(file);
+
+      // on reader load somthing...
+      reader.onload = () => {
+        // Make a fileInfo Object
+        console.log("Called", reader);
+        baseURL = reader.result;
+        console.log(baseURL);
+        resolve(baseURL);
+      };
+      console.log(fileInfo);
+    });
+  };
+
   const onSubmitHandler = async (e) => {
     e.preventDefault();
     const result = await createFruit(fruit);
@@ -24,9 +46,32 @@ export default function AddDialog(props) {
     window.location.reload()
   };
 
-  const handleChangeImage = (event, { base64 }) => {
-    setImageFile(URL.createObjectURL(event.target.files[0]));
-    setFruit({ ...fruit, image: base64 });
+  const handleChangeImage = (e) => {
+    // setImageFile(URL.createObjectURL(event.target.files[0]));
+    // setFruit({ ...fruit, image: base64 });
+    // console.log(e.target.files[0]);
+    // let { file } = this.state;
+
+    // file = e.target.files[0];
+
+    getBase64(e.target.files[0])
+      .then(result => {
+        // file["base64"] = result;
+        // console.log("File Is", file);
+        // this.setState({
+        //   base64URL: result,
+        //   file
+        // });
+        setFruit({...fruit, image: result})
+      })
+      .catch(err => {
+        console.log(err);
+      });
+      
+
+    // this.setState({
+    //   file: e.target.files[0]
+    // });
   };
 
   return (
@@ -58,6 +103,7 @@ export default function AddDialog(props) {
             >
               Upload Image
               <input
+                onChange={handleChangeImage}
                 accept="image/*"
                 id="raised-button-file"
                 multiple
@@ -67,7 +113,7 @@ export default function AddDialog(props) {
             </Button>
           </DialogContent>
           <img
-            src={imageFile}
+            src={fruit.image}
             style={{ width: "100%", height: "60%", alignContent: "center" }}
           />
           <Button
