@@ -11,6 +11,8 @@ import MenuIcon from "@mui/icons-material/Menu";
 import NotificationsIcon from "@mui/icons-material/Notifications";
 import Tab from "@mui/material/Tab";
 import Tabs from "@mui/material/Tabs";
+import Box from "@mui/material/Box";
+
 import Toolbar from "@mui/material/Toolbar";
 import Tooltip from "@mui/material/Tooltip";
 import Typography from "@mui/material/Typography";
@@ -25,6 +27,10 @@ function Header(props) {
     window.location.reload()
   };
 
+  const handleSignOut = () => () => {
+    localStorage.removeItem("access_token")
+    window.location.reload()
+  }
   // const handleButtonBack = pageURL => {
   //   history.push(pageURL);
   //   window.location.reload()
@@ -41,14 +47,24 @@ function Header(props) {
         <Toolbar>
           <Grid container spacing={1} alignItems="center" />
           <Tooltip>
-            <Button
-              variant="contained"
-              size="large"
-              sx={{ margin: "10px", bgcolor: "#c1c1c1" }}
-              onClick={() => handleButtonClick(window.location.pathname == '/' ? "/setting":"/")}
-            >
-              {window.location.pathname == '/' ? "Setting":"Home"}
-            </Button>
+            <Box sx={{display:'flex', width:'50%', flexGrow:1}}>
+              <Button
+                variant="contained"
+                size="large"
+                sx={{ margin: "10px", bgcolor: "#c1c1c1" }}
+                onClick={() => handleButtonClick(window.location.pathname == '/' ? "/setting":"/")}
+              >
+                {window.location.pathname == '/' ? "Setting":"Home"}
+              </Button>
+              <Button
+               variant="contained"
+               size="large"
+               sx={{ margin: "10px", bgcolor: "#c1c1c1" }}
+               onClick={handleSignOut()}
+              >
+                Sign Out
+              </Button>
+            </Box>
           </Tooltip>
         </Toolbar>
       </AppBar>

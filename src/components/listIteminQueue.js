@@ -44,7 +44,7 @@ export default function ListItemInQueue(props) {
               key={item[0]}
             >
               <ListItemAvatar>
-                  <FolderIcon />
+                  <Avatar alt="fruit" src={item[2]}/>
               </ListItemAvatar>
               <ListItemText primary={item[0]+" "+item[1]} />
             </ListItem>

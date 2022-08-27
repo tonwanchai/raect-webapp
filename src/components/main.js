@@ -9,7 +9,8 @@ import Content from './content';
 import Header from './header';
 import Container from '@mui/material/Container';
 import Setting from './setting'
-import { Route, Switch } from "react-router-dom";
+import { Route, Switch, Redirect } from "react-router-dom";
+import SignIn from "../sign_in"
 let theme = createTheme({
   palette: {
     primary: {
@@ -153,12 +154,9 @@ theme = {
   },
 };
 
-
-export default function Main() {
-
+const RenderLogic = () => {
   return (
     <ThemeProvider theme={theme}>
-      <title>game</title>
       <Box sx={{ display: 'flex', minHeight: '100vh' }}>
         <CssBaseline />
         <Box sx={{ flex: 1 , display: 'flex', flexDirection: 'column'}}>
@@ -176,4 +174,41 @@ export default function Main() {
       </Box>
     </ThemeProvider>
   );
+}
+
+export default function Main() {
+  
+  const login = localStorage.getItem('access_token')
+
+  if (!login) {
+    return(
+      <>
+        <Redirect to="/sign_in" />
+        <Switch>
+         <Route exact path="/sign_in" render={props => <SignIn {...props} />}/>
+        </Switch>
+      </>
+    )
+  }else{
+    return(
+      <ThemeProvider theme={theme}>
+      <Box sx={{ display: 'flex', minHeight: '100vh' }}>
+        <CssBaseline />
+        <Box sx={{ flex: 1 , display: 'flex', flexDirection: 'column'}}>
+          <Header />
+          <Box component="main" sx={{ flex: 1, py: 6, px: 4, bgcolor: '#eaeff1' }}>
+            <Container>
+              <Switch>
+                <Route exact from="/" render={props => <Content {...props} />}/>
+                <Route exact path="/setting" render={props => <Setting {...props} />}/>
+              </Switch>
+              {/* <Content/> */}
+            </Container>
+          </Box>
+        </Box>
+      </Box>
+    </ThemeProvider>
+    )
+  }
+
 }

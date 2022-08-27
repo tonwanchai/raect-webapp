@@ -127,3 +127,13 @@ export const updateQueueFruit = async(data) => {
     console.log(error)
   }
 }
+
+export const signIn = async(data) => {
+  try {
+    const result  = await api.signIn(data)
+    console.log(result)
+    return result
+  } catch (error) {
+    console.log(error)
+  }
+}

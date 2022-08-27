@@ -18,13 +18,21 @@ export default function BoxDialog(props) {
         open={open}
         onClose={() => handleClose()}
         PaperProps={{
-          style: { width: '50%',height: '400px' },
+          style: { width: '50%',height: '500px' },
         }}
       >
-        <DialogContent>
-          <DialogContentText id="alert-dialog-description" sx={{textAlign:'center', marginTop:'2rem', fontSize:'48px'}}>
-            {data.name}
-          </DialogContentText>
+        <DialogContent sx={{alignContent:'center'}}>
+            <DialogContentText id="alert-dialog-description" sx={{textAlign:'center', marginTop:'2rem', fontSize:'48px'}}>
+              {data.name}
+            </DialogContentText>
+            <Box sx={{width:'100%', display:'flex', justifyContent:'center'}}>
+
+              <img
+                src={data.image}
+                alt="fruit"
+                style={{ width: "300px", height: "300px"}}
+              />
+            </Box>
         </DialogContent>
         <DialogActions>
           <Box textAlign='center'>

@@ -2,7 +2,7 @@ import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
-import { Box, Button, Typography } from "@mui/material";
+import { Box, Button, Typography, Stack, Avatar, ListItemAvatar, List } from "@mui/material";
 import { useState, useEffect } from "react";
 import ListItem from "@mui/material/ListItem";
 import ListItemText from "@mui/material/ListItemText";
@@ -36,11 +36,22 @@ export default function CartDialog(props) {
             id="alert-dialog-description"
             sx={{marginTop: "2rem" }}
           >
-            {dataCart.map((data) => (
-              <ListItem key={data._id}>
-                <ListItemText disableTypography primary={<Typography fontSize={30}>{data.name}</Typography>} />
-              </ListItem>
-            ))}
+            <List sx={{ pt: 0 }}>
+              {dataCart.map((data) => (
+                <ListItem key={data._id} >
+                  <ListItemAvatar >
+                    <Avatar 
+                      alt="fruit" 
+                      imgProps={{
+                        style: {margin:'auto'}
+                      }}
+                      src={data.image}
+                    />
+                  </ListItemAvatar>
+                  <ListItemText disableTypography primary={<Typography fontSize={30}>{data.name}</Typography>} />
+                </ListItem>
+              ))}
+            </List>
           </DialogContentText>
         </DialogContent>
         <DialogActions>

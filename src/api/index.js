@@ -1,5 +1,11 @@
 import axios from 'axios';
+const config = {
+    header: {
+        Authorization: `JWT ${localStorage.getItem('access_token')}`
+    }
+}
 const url = "http://localhost:5000/fruit";
+const url2 = "http://localhost:5000"
 export const getFruits = ()=>axios.get(url);
 export const createFruit = (fruit)=>axios.post(`${url}/create-fruit`, fruit);
 export const editFruit = (id,fruit)=>axios.put(`${url}/update-fruit/${id}`, fruit)
@@ -13,3 +19,4 @@ export const getCart = ()=>axios.get(`${url}/cart`)
 export const deleteAllCart = ()=> axios.delete(`${url}/cart/delete`)
 export const createCart = (data)=> axios.post(`${url}/cart/create`, { data : {fruitID : data} })
 export const updateQueueFruit = (data) => axios.put(`${url}/queue/update-fruit`, {fruitID : data})
+export const signIn = (data) => axios.post(`${url2}/auth/sign_in`, data).then(res => res.data)

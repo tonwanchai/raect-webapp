@@ -29,8 +29,9 @@ export default function Content() {
   const [queue, setQueue] = useState([]);
   const [dataCart, setDataCart] = useState([])
   const [nameFruitInQueue, setNameFruitInQueue] = useState([])
-  const [listItem, setListItem] = useState([{name:'',count:0}])
+  const [listItem, setListItem] = useState([{name:'',count:0,image:''}])
   useEffect(() => { 
+    
     const fetchData = async () => {
       const fruitsData = await getFruits();
       const queueData = await getFruitQueue();
@@ -46,7 +47,7 @@ export default function Content() {
       getNameFromQueue = getNameFromQueue.flat()
       setNameFruitInQueue(getNameFromQueue)
       let items  = []
-      fruitsData.forEach((fruit) => items.push([fruit.name, queueData.filter((queue) => queue.fruitID === fruit._id).length]))
+      fruitsData.forEach((fruit) => items.push([fruit.name, queueData.filter((queue) => queue.fruitID === fruit._id).length, fruit.image]))
       items = items.filter((item) => item[1] !== 0)
       console.log(items)
       setListItem(items)
@@ -79,11 +80,11 @@ export default function Content() {
       const deleteQueue = await deleteQueueByID(dataQueue._id)
       // const create = await createCart({name: getFirstFruit.name})
       if (localStorage.getItem('cart') === null) {
-        let dataInCart = (getFirstFruit.name) ? ([{name: getFirstFruit.name}]):([])
+        let dataInCart = (getFirstFruit.name) ? ([{name: getFirstFruit.name, image: getFirstFruit.image}]):([])
         localStorage.setItem('cart', JSON.stringify(dataInCart))  
       } else{
         let dataInCart = JSON.parse(localStorage.getItem('cart'))
-        dataInCart.push({name: getFirstFruit.name})
+        dataInCart.push({name: getFirstFruit.name, image: getFirstFruit .image})
         localStorage.setItem('cart', JSON.stringify(dataInCart))
       }
       // localStorage.setItem(cart, ) 
