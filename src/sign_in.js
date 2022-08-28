@@ -14,12 +14,18 @@ import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { signIn } from './functions/index'
 import { Redirect, useHistory } from 'react-router-dom'
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
+import { Alert, Snackbar } from '@mui/material';
+
 const theme = createTheme();
 
 export default function SignIn() {
   const history = useHistory()
   let isLoggedIn = false
+  const [emailErrorText, setEmailErrorText] = useState("")
+  const [passErrorText, setPassErrorText] = useState("")
+  const [snackbar, setSnackbar] = useState(false)
+  const [errorMessage, setErrorMessage] = useState("")
   useEffect(()=> {
     const token = localStorage.getItem('access_token')
     if(token){
@@ -30,22 +36,48 @@ export default function SignIn() {
 
   const handleSubmit = async(event) => {
     event.preventDefault();
+    setEmailErrorText("")
+    setPassErrorText("")
     const data = new FormData(event.currentTarget);
-    console.log({
-      email: data.get('email'),
-      password: data.get('password'),
-    });
     const sendData = {
       email: data.get('email'),
       password: data.get('password'),
     }
-    const result = await signIn(sendData)
-    console.log(result)
-    localStorage.setItem("access_token", result.token)
-    history.push('/')
-    window.location.reload()
+    
+    if (sendData.email == ""){
+      setEmailErrorText("Please enter your email")
+    }
+    if (sendData.password == ""){
+      setPassErrorText("Please enter your password")
+    } 
+    
+    if(emailErrorText.length!==0 || passErrorText.length!==0) {
+      return console.log("error")
+    }else{
+   
+      const result = await signIn(sendData)
+      console.log(result)
+
+      if (result.status == 200){
+        localStorage.setItem("access_token", result.token)
+        history.push('/')
+        window.location.reload()
+      }else{
+        setSnackbar(true)
+        setErrorMessage(result.data.message)
+        console.log(result.data.message)
+      }
+
+      
+    }
   };
   
+  const handleCloseSnackbar = () => {
+    setSnackbar(false);
+  };
+
+  const vertical = "top"
+  const horizontal = "right"
   return (
     <ThemeProvider theme={theme}>
       <Container component="main" maxWidth="xs">
@@ -71,6 +103,8 @@ export default function SignIn() {
               name="email"
               autoComplete="email"
               autoFocus
+              error={(emailErrorText.length!==0)? true:false}
+              helperText={emailErrorText}
             />
             <TextField
               margin="normal"
@@ -81,6 +115,8 @@ export default function SignIn() {
               type="password"
               id="password"
               autoComplete="current-password"
+              error={(passErrorText.length!==0)? true:false}
+              helperText={passErrorText}
             />
             <FormControlLabel
               control={<Checkbox value="remember" color="primary" />}
@@ -94,7 +130,7 @@ export default function SignIn() {
             >
               Sign In
             </Button>
-            <Grid container>
+            {/* <Grid container>
               <Grid item xs>
                 <Link href="#" variant="body2">
                   Forgot password?
@@ -105,10 +141,24 @@ export default function SignIn() {
                   {"Don't have an account? Sign Up"}
                 </Link>
               </Grid>
-            </Grid>
+            </Grid> */}
           </Box>
         </Box>
       </Container>
+      {snackbar && <Snackbar
+        anchorOrigin={{ vertical, horizontal }}
+        open={snackbar}
+        autoHideDuration={6000} 
+        onClose={handleCloseSnackbar}
+        key={"top" + "right"}
+      >
+        <Alert 
+          onClose={handleCloseSnackbar}  
+          severity="error"
+        >
+          {errorMessage}
+        </Alert>
+      </Snackbar>}
     </ThemeProvider>
   );
 }
