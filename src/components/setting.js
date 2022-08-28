@@ -54,8 +54,8 @@ export default function Setting(props) {
     const fetchData = async () => {
       const fruitsData = await getFruits();
       const queueData = await getFruitQueue();
-      console.log("fetch data;m", fruitsData);
-      console.log("fecth data", queueData.data);
+      // console.log("fetch data;m", fruitsData);
+      // console.log("fecth data", queueData.data);
       setFruits(fruitsData);
       setQueue(queueData.data);
     };
@@ -96,11 +96,8 @@ export default function Setting(props) {
   };
 
   const handleClickDeleteQueue = (index) => {
-    console.log(queue);
-    console.log(index);
     let arrQueue = queue;
     arrQueue.splice(index, 1);
-    console.log(arrQueue);
     setQueue([...arrQueue]);
   };
 
@@ -112,14 +109,19 @@ export default function Setting(props) {
   };
 
   const handleClickConfirm = async () => {
-    console.log("create queue", queue);
+    // console.log("create queue", queue);
     const result = createQueue(queue);
     window.location.reload();
   };
 
-  const handleClickDeleteWithIndex = async (id) => {
-    const result = deleteQueueByID(id);
-    window.location.reload();
+  const handleClickDeleteWithIndex = async (id, index) => {
+  
+    if(!id) handleClickDeleteQueue(index)
+    else{
+      const result = await deleteQueueByID(id);
+      window.location.reload();
+    }
+    // const getQueue = queue.find()
   };
 
   const handleClickDeleteAll = () => {
@@ -235,6 +237,7 @@ export default function Setting(props) {
                               label="Fruit name"
                               onChange={(e) => handleChangeSelectBox(e, index)}
                             >
+                              <MenuItem value=" " />
                               {fruits.map((fruit) => (
                                 <MenuItem value={fruit._id}>
                                   {fruit.name}
@@ -254,7 +257,7 @@ export default function Setting(props) {
                               backgroundColor: "transparent",
                             }}
                             // onClick={() => handleClickDeleteQueue(index)}
-                            onClick={() => handleClickDeleteWithIndex(data._id)}
+                            onClick={() => handleClickDeleteWithIndex(data._id, index)}
                           >
                             <DeleteIcon fontSize="inherit" />
                           </IconButton>
