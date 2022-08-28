@@ -13,6 +13,7 @@ export default function AddDialog(props) {
   const [fruit, setFruit] = useState({ name: "", image: "" });
   const { open, onClose } = props;
   const [imageFile, setImageFile] = useState(null);
+  const [errorFruit, setErrorFruit] = useState(false)
   const handleClose = () => {
     onClose(false);
   };
@@ -40,10 +41,14 @@ export default function AddDialog(props) {
   };
 
   const onSubmitHandler = async (e) => {
-    e.preventDefault();
-    const result = await createFruit(fruit);
-    onClose(false)
-    window.location.reload()
+    setErrorFruit(false)
+    if (fruit.name == ""){
+      return setErrorFruit(true)
+    }else{
+      const result = await createFruit(fruit);
+      onClose(false)
+      window.location.reload()
+    }
   };
 
   const handleChangeImage = (e) => {
@@ -93,6 +98,8 @@ export default function AddDialog(props) {
               label="Name"
               variant="outlined"
               onChange={(e) => setFruit({ ...fruit, name: e.target.value })}
+              error={errorFruit}
+              helperText={errorFruit && "Please enter fruit name"}
             />
             <Button
               fullWidth
@@ -112,12 +119,14 @@ export default function AddDialog(props) {
               />
             </Button>
           </DialogContent>
-          <img
-            src={fruit.image}
-            style={{ width: "100%", height: "60%", alignContent: "center" }}
-          />
+          {fruit.image &&
+            <img
+              src={fruit.image}
+              style={{ width: "100%", height: "60%", alignContent: "center" }}
+            />
+          }
           <Button
-            onClick={onSubmitHandler}
+            onClick={() => onSubmitHandler()}
             fullWidth
             sx={{ marginTop: "20px" }}
             size="large"

@@ -62,7 +62,7 @@ function Header(props) {
                sx={{ margin: "10px", bgcolor: "#c1c1c1" }}
                onClick={handleSignOut()}
               >
-                Sign Out
+                Sign out
               </Button>
             </Box>
           </Tooltip>

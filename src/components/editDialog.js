@@ -13,6 +13,7 @@ export default function EditDialog(props) {
   const { data, onClose, open } = props;
   const [imageFile, setImageFile] = useState(null)
   const [fruit, setFruit] = useState({name:data.name, image:data.image})
+  const [errorFruit, setErrorFruit] = useState(false)
   const handleClose = () => { 
     onClose(false);
   };
@@ -39,10 +40,13 @@ export default function EditDialog(props) {
 
   const onSubmitEditHandler = async (e) => {
     e.preventDefault();
-    console.log(data._id)
-    console.log(fruit)
-    const result = await editFruit(data._id, fruit);
-    onClose(false)
+    setErrorFruit(false)
+    if (fruit.name == ""){
+      setErrorFruit(true)
+    }else{
+      const result = await editFruit(data._id, fruit);
+      onClose(false)
+    }
   };
 
   const getBase64 = file => {
@@ -88,6 +92,8 @@ export default function EditDialog(props) {
               variant="outlined"
               value={fruit.name}
               onChange={handleChangeName}
+              error={errorFruit}
+              helperText={errorFruit && "Please enter fruit name"}
             />
             <Button
               fullWidth
