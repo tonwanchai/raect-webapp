@@ -134,6 +134,6 @@ export const signIn = async(data) => {
     console.log(result)
     return result
   } catch (error) {
-    console.log(error)
+    console.log(error)    
   }
 }

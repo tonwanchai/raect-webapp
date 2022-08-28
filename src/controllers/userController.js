@@ -26,15 +26,15 @@ exports.sign_in = function(req, res) {
   }, function(err, user) {
     if (err) throw err;
     if (!user || !user.comparePassword(req.body.password)) {
-      return res.status(401).json({ message: 'Authentication failed. Invalid user or password.' });
+      return res.status(401).json({ message: 'Authentication failed. Invalid email or password.' });
     }
-    return res.json({ token: jwt.sign({ email: user.email, fullName: user.fullName, _id: user._id }, 'RESTFULAPIs') });
+    return res.json({ token: jwt.sign({ email: user.email, fullName: user.fullName, _id: user._id }, 'RESTFULAPIs'), status:200 });
   });
 };
 
 exports.loginRequired = function(req, res, next) {
 
-  console.log("User = ", req.user)
+  // console.log("User = ", req)
   if (req.user) {
     next();
   } else {

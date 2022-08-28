@@ -28,12 +28,12 @@ const app = express();
 app.use(bodyParser.json({limit: '50mb'}));
 app.use(bodyParser.urlencoded({limit: '50mb',  extended: true }));
 app.use(cors());
-app.use("/fruit", fruitRoute);
 
 app.use(function(req, res, next) {
   console.log("header = ", req.headers.authorization)
   if (req.headers && req.headers.authorization && req.headers.authorization.split(' ')[0] === 'JWT') {
     jsonwebtoken.verify(req.headers.authorization.split(' ')[1], 'RESTFULAPIs', function(err, decode) {
+      console.log(decode)
       if (err) req.user = undefined;
       req.user = decode;
       next();
@@ -45,9 +45,10 @@ app.use(function(req, res, next) {
 });
 
 // app.use(function(req, res) {
-//   res.status(404).send({ url: req.originalUrl + ' not found' })
-// });
-
+  //   res.status(404).send({ url: req.originalUrl + ' not found' })
+  // });
+  
+app.use("/fruit", fruitRoute);
 var routes = require('../src/routes/userRoutes');
 routes(app);
 
