@@ -11,6 +11,7 @@ import Container from '@mui/material/Container';
 import Setting from './setting'
 import { Route, Switch, Redirect } from "react-router-dom";
 import SignIn from "../sign_in"
+import Page404 from "../components/404"
 let theme = createTheme({
   palette: {
     primary: {
@@ -154,32 +155,18 @@ theme = {
   },
 };
 
-const RenderLogic = () => {
-  return (
-    <ThemeProvider theme={theme}>
-      <Box sx={{ display: 'flex', minHeight: '100vh' }}>
-        <CssBaseline />
-        <Box sx={{ flex: 1 , display: 'flex', flexDirection: 'column'}}>
-          <Header />
-          <Box component="main" sx={{ flex: 1, py: 6, px: 4, bgcolor: '#eaeff1' }}>
-            <Container>
-              <Switch>
-                <Route exact from="/" render={props => <Content {...props} />}/>
-                <Route exact path="/setting" render={props => <Setting {...props} />}/>
-              </Switch>
-              {/* <Content/> */}
-            </Container>
-          </Box>
-        </Box>
-      </Box>
-    </ThemeProvider>
-  );
-}
-
 export default function Main() {
   
   const login = localStorage.getItem('access_token')
-
+  if (window.location.pathname == "/sign_in" && login){
+    return(
+      <>
+        <Redirect to="/" />
+        <Render/>
+      </>
+    )
+    
+  }
   if (!login) {
     return(
       <>
@@ -191,7 +178,15 @@ export default function Main() {
     )
   }else{
     return(
-      <ThemeProvider theme={theme}>
+      <Render/>
+    )
+  }
+
+}
+
+const Render = () => {
+  return(
+    <ThemeProvider theme={theme}>
       <Box sx={{ display: 'flex', minHeight: '100vh' }}>
         <CssBaseline />
         <Box sx={{ flex: 1 , display: 'flex', flexDirection: 'column'}}>
@@ -201,6 +196,7 @@ export default function Main() {
               <Switch>
                 <Route exact from="/" render={props => <Content {...props} />}/>
                 <Route exact path="/setting" render={props => <Setting {...props} />}/>
+                <Route component={Page404} />
               </Switch>
               {/* <Content/> */}
             </Container>
@@ -208,7 +204,5 @@ export default function Main() {
         </Box>
       </Box>
     </ThemeProvider>
-    )
-  }
-
+  )
 }
