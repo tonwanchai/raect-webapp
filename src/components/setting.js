@@ -19,6 +19,7 @@ import { createFruit, getFruits } from "../functions";
 import io from "socket.io-client"
 import DeleteIcon from "@mui/icons-material/Delete";
 import useDocumentTitle from './useDocumentTitle'
+import useMediaQuery from '@mui/material/useMediaQuery';
 import {
   deleteFruit,
   getFruitQueue,
@@ -41,7 +42,9 @@ const Item = styled(Button)(({ theme }) => ({
   color: theme.palette.text.secondary,
 }));
 
+
 export default function Setting(props) {
+  const checkResponsive = useMediaQuery('(min-width:900px)')
   useDocumentTitle("Setting")
   const [fruits, setFruits] = useState([]);
   const [fruit, setFruit] = useState({ name: "", image: "" });
@@ -200,13 +203,20 @@ export default function Setting(props) {
           </Grid>
           <Grid item xs={12} md={6} key={2}>
             <Box
-              sx={{
+              sx={!checkResponsive ? {
+                backgroundColor: "#d9d9d9",
+                width: "80%",
+                height: 824,
+                overflow: "auto",
+              }:
+              {
                 backgroundColor: "#d9d9d9",
                 width: "80%",
                 height: 824,
                 overflow: "auto",
                 marginLeft: "auto"
-              }}
+              }
+              }
             >
               <br />
 

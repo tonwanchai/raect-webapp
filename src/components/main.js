@@ -21,6 +21,7 @@ let theme = createTheme({
     },
   },
   typography: {
+    "fontFamily": `"kanit", sans-serif`,
     h5: {
       fontWeight: 500,
       fontSize: 26,
@@ -191,7 +192,7 @@ const Render = () => {
         <CssBaseline />
         <Box sx={{ flex: 1 , display: 'flex', flexDirection: 'column'}}>
           <Header />
-          <Box component="main" sx={{ flex: 1, py: 6, px: 4, bgcolor: '#eaeff1' }}>
+          <Box component="main" sx={{ flex: 1, py: 6, px: 4, bgcolor: '#F7B85B' }}>
             <Container>
               <Switch>
                 <Route exact from="/" render={props => <Content {...props} />}/>

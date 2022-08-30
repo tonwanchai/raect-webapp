@@ -16,10 +16,11 @@ import Popover from '@mui/material/Popover';
 import Box from '@mui/material/Box'
 export default function ListItemInQueue(props) {
   const [Items, setItems] = useState({})
-  const { onClose, open, anchorEl, data } = props;
+  const { onClose, open, anchorEl, data, setImgCheck } = props;
   const [listItem, setListItem] = useState(data);
   
   const handleClose = () => {
+    setImgCheck("./images/Check1.png")
     onClose(false);
   };
 
@@ -35,7 +36,10 @@ export default function ListItemInQueue(props) {
           horizontal: 'left',
         }}
         PaperProps={{
-          style: { width: '20%' },
+          style: { 
+            width: '20%',
+            overflow: 'auto'
+          },
         }}
       >
         <List sx={{ pt: 0 }}>

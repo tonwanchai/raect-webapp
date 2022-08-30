@@ -8,11 +8,12 @@ import ListItem from "@mui/material/ListItem";
 import ListItemText from "@mui/material/ListItemText";
 import { getCart, deleteAllCart } from "../functions/index"
 export default function CartDialog(props) {
-  const { onClose, data, open, stateChanger } = props;
+  const { onClose, data, open, setImgCart } = props;
   const [loading, setLoading] = useState(false)
   const [dataCart, setDataCart] = useState((data === null)? []:data)
 
   const handleClose = () => {
+    setImgCart("./images/Chest-1.png")
     onClose(false);
   };
 
