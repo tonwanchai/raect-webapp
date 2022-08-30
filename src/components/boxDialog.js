@@ -12,7 +12,6 @@ export default function BoxDialog(props) {
   useEffect(() => {
     setTimeout(() => {
       setIsLoading(true);
-      console.log("eiei")
     }, 2000);
   }, []);
   const handleClose = () => {

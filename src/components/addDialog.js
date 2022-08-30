@@ -8,76 +8,76 @@ import DialogTitle from "@mui/material/DialogTitle";
 import Container from "@mui/material/Container";
 import { useState } from "react";
 import FileBase64 from "react-file-base64";
+import ImageUploading from "react-images-uploading";
 import { createFruit } from "../functions";
+import { getFruits } from "../api";
 export default function AddDialog(props) {
   const [fruit, setFruit] = useState({ name: "", image: "" });
   const { open, onClose } = props;
-  const [imageFile, setImageFile] = useState(null);
-  const [errorFruit, setErrorFruit] = useState(false)
+  const [images, setImages] = useState([]);
+  const maxNumber = 69;
+  const [errorFruit, setErrorFruit] = useState(false);
+
+  const imgStyle = {
+    display: 'block',
+    marginLeft: 'auto',
+    marginRight: 'auto',
+    marginTop: '20px'
+  }
+
   const handleClose = () => {
     onClose(false);
   };
 
-  const getBase64 = file => {
-    return new Promise(resolve => {
-      let fileInfo;
-      let baseURL = "";
-      // Make new FileReader
-      let reader = new FileReader();
-
-      // Convert the file to base64 text
-      reader.readAsDataURL(file);
-
-      // on reader load somthing...
-      reader.onload = () => {
-        // Make a fileInfo Object
-        console.log("Called", reader);
-        baseURL = reader.result;
-        console.log(baseURL);
-        resolve(baseURL);
-      };
-      console.log(fileInfo);
-    });
-  };
-
   const onSubmitHandler = async (e) => {
-    setErrorFruit(false)
-    if (fruit.name == ""){
-      return setErrorFruit(true)
-    }else{
+    setErrorFruit(false);
+    if (fruit.name == "") {
+      return setErrorFruit(true);
+    } else {
       const result = await createFruit(fruit);
-      onClose(false)
-      window.location.reload()
+      onClose(false);
+      window.location.reload();
     }
   };
 
-  const handleChangeImage = (e) => {
-    // setImageFile(URL.createObjectURL(event.target.files[0]));
-    // setFruit({ ...fruit, image: base64 });
-    // console.log(e.target.files[0]);
-    // let { file } = this.state;
-
-    // file = e.target.files[0];
-
-    getBase64(e.target.files[0])
-      .then(result => {
-        // file["base64"] = result;
-        // console.log("File Is", file);
-        // this.setState({
-        //   base64URL: result,
-        //   file
-        // });
-        setFruit({...fruit, image: result})
-      })
-      .catch(err => {
-        console.log(err);
-      });
-      
-
-    // this.setState({
-    //   file: e.target.files[0]
-    // });
+  const onChange = (imageList, addUpdateIndex) => {
+    // data for submit
+    console.log(imageList, addUpdateIndex);
+    if(imageList[0]) setFruit({ ...fruit, image: imageList[0]["data_url"] });
+    setImages(imageList);
   };
+
+  // const getBase64 = (file) => {
+  //   return new Promise((resolve) => {
+  //     let fileInfo;
+  //     let baseURL = "";
+  //     // Make new FileReader
+  //     let reader = new FileReader();
+
+  //     // Convert the file to base64 text
+  //     reader.readAsDataURL(file);
+
+  //     // on reader load somthing...
+  //     reader.onload = () => {
+  //       // Make a fileInfo Object
+  //       console.log("Called", reader);
+  //       baseURL = reader.result;
+  //       console.log(baseURL);
+  //       resolve(baseURL);
+  //     };
+  //     console.log(fileInfo);
+  //   });
+  // };
+
+  // const handleChangeImage = (e) => {
+  //   getBase64(e.target.files[0])
+  //     .then((result) => {
+  //       setFruit({ ...fruit, image: result });
+  //     })
+  //     .catch((err) => {
+  //       console.log(err);
+  //     });
+  // };
 
   return (
     <>
@@ -101,30 +101,43 @@ export default function AddDialog(props) {
               error={errorFruit}
               helperText={errorFruit && "Please enter fruit name"}
             />
-            <Button
-              fullWidth
-              sx={{ marginTop: "20px" }}
-              size="large"
-              component="label"
-              variant="contained"
+            <ImageUploading
+              value={images}
+              onChange={onChange}
+              maxNumber={maxNumber}
+              dataURLKey="data_url"
             >
-              Upload Image
-              <input
-                onChange={handleChangeImage}
-                accept="image/*"
-                id="raised-button-file"
-                multiple
-                type="file"
-                hidden
-              />
-            </Button>
+              {({
+                imageList,
+                onImageUpload,
+                onImageRemoveAll,
+                onImageUpdate,
+                onImageRemove,
+                isDragging,
+                dragProps,
+              }) => (
+                // write your building UI
+                <div className="upload__image-wrapper">
+                  <Button
+                    fullWidth
+                    sx={{marginTop: '20px'}}
+                    variant="contained"
+                    style={isDragging ? { color: "red" } : undefined}
+                    onClick={onImageUpload}
+                    {...dragProps}
+                  >
+                    Click or Drop here
+                  </Button>
+                  {imageList.map((image, index) => (
+                    <div key={index} className="image-item">
+                      <img src={image["data_url"]} alt="" width="300" style={imgStyle} />
+                     
+                    </div>
+                  ))}
+                </div>
+              )}
+            </ImageUploading>
           </DialogContent>
-          {fruit.image &&
-            <img
-              src={fruit.image}
-              style={{ width: "100%", height: "60%", alignContent: "center" }}
-            />
-          }
           <Button
             onClick={() => onSubmitHandler()}
             fullWidth

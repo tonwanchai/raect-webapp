@@ -79,7 +79,6 @@ export default function Setting(props) {
 
   const handleCloseEditItemButton = () => {
     setOpenEditItem(false);
-    window.location.reload();
   };
 
   const handleClickAddSelectBox = () => {
