@@ -11,6 +11,7 @@ import CartDialog from './cartDialog'
 import axios from 'axios'
 import { useEffect, useState } from 'react';
 import { getFruits, getFruitQueue, deleteQueueByID, createCart, getCart } from '../functions'
+import useDocumentTitle from './useDocumentTitle';
 import socketIOClient from "socket.io-client";
 const ENDPOINT = "http://127.0.0.1:5000";
 
@@ -20,6 +21,7 @@ const client =  axios.create({
 })
 
 export default function Content() {
+  useDocumentTitle("Play")
   const [openCheckButton, setOpenCheckButton] = React.useState(false);
   const [openBoxButton, setOpenBoxButton] = React.useState(false);
   const [openCartButton, setOpenCartButton] = React.useState(false);
@@ -82,7 +84,6 @@ export default function Content() {
   const handleClickOpenBoxButton = async (event) => {
     let getFirstFruit = [];
     if (nameFruitInQueue.length > 0){
-      console.log(queue)
       setOpenBoxButton(true);
       let dataQueue = queue.shift()
       getFirstFruit = nameFruitInQueue.shift()
@@ -101,14 +102,6 @@ export default function Content() {
       // localStorage.setItem(cart, ) 
     }
 
-    // คลิกกล่อง
-    // เอาค่าแรกจากคิวมาแสดงและลบออกจากคิว
-
-    //Set data from queue to dataFromQueue
-    //Update data in queue
-    //Push data after random to dataFromRandom  >>>>>> oldArray => [...oldArray, newElement]
-    //Cart data need to use Database too
-    // setDataCart(dataCart => [...dataCart, getFirstFruit])
   };
 
   const handleCloseBoxButton = () => {

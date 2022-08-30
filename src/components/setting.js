@@ -18,6 +18,7 @@ import EditDialog from "./editDialog";
 import { createFruit, getFruits } from "../functions";
 import io from "socket.io-client"
 import DeleteIcon from "@mui/icons-material/Delete";
+import useDocumentTitle from './useDocumentTitle'
 import {
   deleteFruit,
   getFruitQueue,
@@ -41,6 +42,7 @@ const Item = styled(Button)(({ theme }) => ({
 }));
 
 export default function Setting(props) {
+  useDocumentTitle("Setting")
   const [fruits, setFruits] = useState([]);
   const [fruit, setFruit] = useState({ name: "", image: "" });
   const [openAddItem, setOpenAddItem] = useState(false);
@@ -159,8 +161,8 @@ export default function Setting(props) {
             >
               <br />
               <Stack spacing={2} sx={{ width: "80%", margin: "auto" }}>
-                {fruits.map((fruit) => (
-                  <Box fullWidth key={fruit._id} sx={{ display: "flex" }}>
+                {fruits.map((fruit, index) => (
+                  <Box fullWidth key={fruit._id} sx={{ display: "flex" }} >
                     <Box sx={{ width: "90%" }}>
                       <Item
                         key={fruit._id}
@@ -212,7 +214,7 @@ export default function Setting(props) {
                 {queue.map(
                   (data, index) =>
                     data.fruitID !== "undefined" && (
-                      <Box fullWidth sx={{ display: "flex" }}>
+                      <Box fullWidth sx={{ display: "flex" }} key={index}>
                         <Box sx={{ width: "90%" }}>
                           <FormControl fullWidth>
                             <InputLabel
@@ -238,7 +240,7 @@ export default function Setting(props) {
                             >
                               <MenuItem value=" " />
                               {fruits.map((fruit) => (
-                                <MenuItem value={fruit._id}>
+                                <MenuItem value={fruit._id} key={fruit._id}>
                                   {fruit.name}
                                 </MenuItem>
                               ))}
