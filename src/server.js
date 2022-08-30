@@ -4,10 +4,24 @@ let express = require("express"),
   bodyParser = require("body-parser"),
   dbConfig = require("./database/db"),
   User = require('../src/models/user'),
-  jsonwebtoken = require('jsonwebtoken')
+  FruitQueue = require('../src/models/fruitQueue'),
+  jsonwebtoken = require('jsonwebtoken');
+const http = require("http");
 const fruitRoute = require("./routes/routes");
 require('dotenv').config()
+const socketIo = require("socket.io");
 const port = process.env.PORT || 5000
+const app = express();
+const serverr = http.createServer(app);
+
+
+const io = socketIo(serverr, {
+  cors: {
+    origin: "http://localhost:3000"
+  }
+  
+});
+
 mongoose.Promise = global.Promise;
 
 mongoose
@@ -24,7 +38,6 @@ mongoose
     }
   );
 
-const app = express();
 app.use(bodyParser.json({limit: '50mb'}));
 app.use(bodyParser.urlencoded({limit: '50mb',  extended: true }));
 app.use(cors());
@@ -47,17 +60,43 @@ app.use(function(req, res, next) {
 // app.use(function(req, res) {
   //   res.status(404).send({ url: req.originalUrl + ' not found' })
   // });
-  
+
 app.use("/fruit", fruitRoute);
 var routes = require('../src/routes/userRoutes');
 routes(app);
 
 
-const server = app.listen(port, () => {
-  console.log(`Server is running in port ${port}`);
+// const server = app.listen(port, () => {
+//   console.log(`Server is running in port ${port}`);
+// });
+
+let interval;
+
+io.on("connection", (socket) => {
+  console.log("New client connected");
+  if (interval) {
+    clearInterval(interval);
+  }
+
+  interval = setInterval(() => getApiAndEmit(socket), 3000);
+  socket.on("disconnect", () => {
+    console.log("Client disconnected");
+  
+  });
 });
 
+const getApiAndEmit = socket => {
+  let fruitQueueData;
+  FruitQueue.find({},function (err, data){
+    if(err) console.log(err)
+    else return socket.emit("FromAPI", data);
+  })
+  // console.log(response)
+  // Emitting a new message. Will be consumed by the client
+  // socket.emit("FromAPI", fruitQueueData);
+};
 
+serverr.listen(port, () => console.log(`Listening on port ${port}`));
 
 app.use((err, req, res, next) => {
   console.error(err.message);

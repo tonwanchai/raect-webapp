@@ -16,7 +16,7 @@ import AddBoxIcon from "@mui/icons-material/AddBox";
 import AddDialog from "./addDialog";
 import EditDialog from "./editDialog";
 import { createFruit, getFruits } from "../functions";
-
+import io from "socket.io-client"
 import DeleteIcon from "@mui/icons-material/Delete";
 import {
   deleteFruit,
@@ -29,6 +29,7 @@ import {
 } from "../api";
 import { useHistory } from "react-router-dom";
 
+const URL = "http://localhost:5000/"
 const Item = styled(Button)(({ theme }) => ({
   backgroundColor: theme.palette.mode === "dark" ? "#1A2027" : "#fff",
   ...theme.typography.body2,
@@ -109,7 +110,6 @@ export default function Setting(props) {
   };
 
   const handleClickConfirm = async () => {
-    // console.log("create queue", queue);
     const result = createQueue(queue);
     window.location.reload();
   };

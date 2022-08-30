@@ -11,6 +11,8 @@ import CartDialog from './cartDialog'
 import axios from 'axios'
 import { useEffect, useState } from 'react';
 import { getFruits, getFruitQueue, deleteQueueByID, createCart, getCart } from '../functions'
+import socketIOClient from "socket.io-client";
+const ENDPOINT = "http://127.0.0.1:5000";
 
 const baseURL = 'http://localhost:5000/fruit/'
 const client =  axios.create({
@@ -29,6 +31,7 @@ export default function Content() {
   const [queue, setQueue] = useState([]);
   const [dataCart, setDataCart] = useState([])
   const [nameFruitInQueue, setNameFruitInQueue] = useState([])
+  const [response, setResponse] = useState("");
   const [listItem, setListItem] = useState([{name:'',count:0,image:''}])
   useEffect(() => { 
     
@@ -38,8 +41,6 @@ export default function Content() {
       const cartData = await getCart();
       setDataCart(cartData)
       let getNameFromQueue = []
-      console.log("fetch data;m", fruitsData);
-      console.log("fecth data", queueData);
       setFruits(fruitsData);
       queueData.forEach((data) => {
         getNameFromQueue.push(fruitsData.filter((fruit) => fruit._id === data.fruitID))
@@ -49,10 +50,21 @@ export default function Content() {
       let items  = []
       fruitsData.forEach((fruit) => items.push([fruit.name, queueData.filter((queue) => queue.fruitID === fruit._id).length, fruit.image]))
       items = items.filter((item) => item[1] !== 0)
-      console.log(items)
       setListItem(items)
       setQueue(queueData);
-      console.log(cartData)
+      const socket = socketIOClient(ENDPOINT);
+      socket.on("FromAPI", data => {
+        // console.log("socket data = ", data)
+        // console.log("fruit = ", fruitsData)
+        let items = []
+        setQueue(queueData);
+        fruitsData.forEach((fruit) => items.push([fruit.name, data.filter((queue) => queue.fruitID === fruit._id).length, fruit.image]))
+        items = items.filter((item) => item[1] !== 0)
+        // console.log("items = ", items)
+        setListItem(items)
+
+        // setResponse(data);
+      });
     };
     fetchData();
     setLoading(true);
@@ -134,6 +146,7 @@ export default function Content() {
         </Button>
       </Box>
       <br/>
+      
       <Box sx={{display:'flex', justifyContent:'flex-end', marginTop:'200px'}}>
         <IconButton aria-label="cart" color="primary" style={{ fontSize: 60 }} onClick={handleClickOpenCartButton}>
           <ShoppingCartIcon fontSize="inherit"/>

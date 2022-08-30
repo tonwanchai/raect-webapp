@@ -69,13 +69,13 @@ router.route("/delete-fruit/:id").delete(userHandlers.loginRequired, (req, res, 
 });
 
 router.route("/queue/create-queue").post(userHandlers.loginRequired, (req, res, next) => {
-  console.log(res.body)
+  // console.log(res.body)
   FruitQueueSchema.create(req.body, (error, data) => {
     if (error) {
       console.log(error)
       return next("error");
     } else {
-      console.log(data);
+      // console.log(data);
       res.json(data);
     }
   });
