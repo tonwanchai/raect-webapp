@@ -24,14 +24,13 @@ export default function Content() {
   const [openBoxButton, setOpenBoxButton] = React.useState(false);
   const [openCartButton, setOpenCartButton] = React.useState(false);
   const [dataFromQueue, setDataFromQueue] = React.useState('Apple')
-  const [dataFromRandom, setDataFromRandom] = React.useState([])
   const [anchorEl, setAnchorEl] = React.useState(null)
   const [loading, setLoading] = useState(false);
   const [fruits, setFruits] = useState([]);
   const [queue, setQueue] = useState([]);
   const [dataCart, setDataCart] = useState([])
   const [nameFruitInQueue, setNameFruitInQueue] = useState([])
-  const [response, setResponse] = useState("");
+  const [imgsrc, setImgsrc] = useState("./images/Banana-Single (1).jpg")
   const [listItem, setListItem] = useState([{name:'',count:0,image:''}])
   useEffect(() => { 
     
@@ -125,6 +124,15 @@ export default function Content() {
     setOpenCartButton(false);
   };
   
+
+  const handleMouseOver = () => {
+    setImgsrc("./images/apple300x300.png")
+  }
+
+  const handleMouseOut = () => {
+    setImgsrc("./images/Banana-Single (1).jpg")
+  }
+
   if(!loading) return <></>
 
   return (
@@ -146,7 +154,7 @@ export default function Content() {
         </Button>
       </Box>
       <br/>
-      
+      {/* <img src={imgsrc} onMouseOver={() => handleMouseOver()} onMouseOut={() => handleMouseOut()}/> */}
       <Box sx={{display:'flex', justifyContent:'flex-end', marginTop:'200px'}}>
         <IconButton aria-label="cart" color="primary" style={{ fontSize: 60 }} onClick={handleClickOpenCartButton}>
           <ShoppingCartIcon fontSize="inherit"/>
