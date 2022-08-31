@@ -42,11 +42,14 @@ mongoose
 app.use(bodyParser.json({limit: '50mb'}));
 app.use(bodyParser.urlencoded({limit: '50mb',  extended: true }));
 app.use(cors());
-app.use(express.static(path.join(__dirname.replace('src/',''),"build"))) 
-app.get("*",(req,res) => { 
-    const index = path.join(__dirname, 'build', 'index.html');
-    res.sendFile(index.replace('src\\','')) 
-}) 
+ 
+if (process.env.NODE_ENV) {
+  app.use(express.static(path.join(__dirname.replace('src/',''),"build"))) 
+  app.get("*",(req,res) => { 
+      const index = path.join(__dirname, 'build', 'index.html');
+      res.sendFile(index.replace('src\\','')) 
+  })
+}
 
 app.use(function(req, res, next) {
   console.log("header = ", req.headers.authorization)
