@@ -7,6 +7,7 @@ let express = require("express"),
   FruitQueue = require('../src/models/fruitQueue'),
   jsonwebtoken = require('jsonwebtoken');
 const http = require("http");
+const path = require('path')
 const fruitRoute = require("./routes/routes");
 require('dotenv').config()
 const socketIo = require("socket.io");
@@ -41,6 +42,11 @@ mongoose
 app.use(bodyParser.json({limit: '50mb'}));
 app.use(bodyParser.urlencoded({limit: '50mb',  extended: true }));
 app.use(cors());
+
+app.use(express.static(path.join(__dirname,"client/build"))) 
+app.get("*",(req,res) => { 
+    res.sendFile(path.join(__dirname + "/client/build/index.html")) 
+}) 
 
 app.use(function(req, res, next) {
   console.log("header = ", req.headers.authorization)
