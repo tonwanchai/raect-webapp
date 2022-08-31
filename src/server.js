@@ -44,7 +44,7 @@ app.use(bodyParser.urlencoded({limit: '50mb',  extended: true }));
 app.use(cors());
  
 if (process.env.NODE_ENV) {
-  app.use(express.static(path.join(__dirname.replace('src/',''),"build"))) 
+  app.use(express.static('build')) 
   app.get("*",(req,res) => { 
       const index = path.join(__dirname, 'build', 'index.html');
       res.sendFile(index) 
