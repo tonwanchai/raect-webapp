@@ -5,9 +5,12 @@ import DialogContentText from "@mui/material/DialogContentText";
 import { Box, Button } from "@mui/material";
 import { CircularProgress } from "@mui/material";
 import { useEffect, useState } from "react";
+import useMediaQuery from '@mui/material/useMediaQuery';
+
 export default function BoxDialog(props) {
   const { onClose, open, data } = props;
   const [isLoading, setIsLoading] = useState(false);
+  const checkResponsive = useMediaQuery('(min-width:900px)')
 
   useEffect(() => {
     setTimeout(() => {
@@ -25,7 +28,7 @@ export default function BoxDialog(props) {
         open={open}
         onClose={() => handleClose()}
         PaperProps={{
-          style: { width: "50%", height: "500px" },
+          style: checkResponsive ? { width: "50%", height: "500px" } : { width: "100%", height: "500px"}
         }}
       >
         {isLoading && (

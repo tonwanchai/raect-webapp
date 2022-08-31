@@ -10,6 +10,8 @@ import BoxDialog from "./boxDialog";
 import CartDialog from "./cartDialog";
 import axios from "axios";
 import { useEffect, useState } from "react";
+import useMediaQuery from '@mui/material/useMediaQuery';
+
 import {
   getFruits,
   getFruitQueue,
@@ -43,6 +45,7 @@ const checkStyle = {
 }
 
 export default function Content() {
+  const checkResponsive = useMediaQuery('(min-width:900px)')
   useDocumentTitle("Play");
   const [openCheckButton, setOpenCheckButton] = React.useState(false);
   const [openBoxButton, setOpenBoxButton] = React.useState(false);

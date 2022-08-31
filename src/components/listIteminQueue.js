@@ -14,10 +14,13 @@ import Typography from "@mui/material/Typography";
 import { blue } from "@mui/material/colors";
 import Popover from '@mui/material/Popover';
 import Box from '@mui/material/Box'
+import useMediaQuery from '@mui/material/useMediaQuery';
+
 export default function ListItemInQueue(props) {
   const [Items, setItems] = useState({})
   const { onClose, open, anchorEl, data, setImgCheck } = props;
   const [listItem, setListItem] = useState(data);
+  const checkResponsive = useMediaQuery('(min-width:900px)')
   
   const handleClose = () => {
     setImgCheck("./images/Check1.png")
@@ -36,10 +39,13 @@ export default function ListItemInQueue(props) {
           horizontal: 'left',
         }}
         PaperProps={{
-          style: { 
+          style: checkResponsive ?{ 
             width: '20%',
             overflow: 'auto'
-          },
+          } : {
+            width: '100%',
+            overflow: 'auto'
+          }
         }}
       >
         <List sx={{ pt: 0 }}>

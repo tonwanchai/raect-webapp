@@ -7,10 +7,13 @@ import { useState, useEffect } from "react";
 import ListItem from "@mui/material/ListItem";
 import ListItemText from "@mui/material/ListItemText";
 import { getCart, deleteAllCart } from "../functions/index"
+import useMediaQuery from '@mui/material/useMediaQuery';
+
 export default function CartDialog(props) {
   const { onClose, data, open, setImgCart } = props;
   const [loading, setLoading] = useState(false)
   const [dataCart, setDataCart] = useState((data === null)? []:data)
+  const checkResponsive = useMediaQuery('(min-width:900px)')
 
   const handleClose = () => {
     setImgCart("./images/Chest-1.png")
@@ -29,7 +32,7 @@ export default function CartDialog(props) {
         open={open}
         onClose={handleClose}
         PaperProps={{
-          style: { width: "50%", height: "600px" },
+          style: checkResponsive ? { width: "50%", height: "600px" } : {width: "100%", height: "600px"}
         }}
       >
         <DialogContent>

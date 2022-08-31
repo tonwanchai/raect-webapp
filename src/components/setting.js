@@ -30,7 +30,7 @@ import {
   updateQueueFruit,
 } from "../api";
 import { useHistory } from "react-router-dom";
-
+import FormHelperText from '@mui/material/FormHelperText';
 const URL = "http://localhost:5000/"
 const Item = styled(Button)(({ theme }) => ({
   backgroundColor: theme.palette.mode === "dark" ? "#1A2027" : "#fff",
@@ -54,6 +54,7 @@ export default function Setting(props) {
   const [addSelectBox, setAddSelectBox] = useState([]);
   const [loading, setLoading] = useState(false);
   const [queue, setQueue] = useState([]);
+  const [errorQueue, setErrorQueue] = useState([])
   const history = useHistory();
 
   useEffect(() => {
@@ -62,6 +63,7 @@ export default function Setting(props) {
       const queueData = await getFruitQueue();
       // console.log("fetch data;m", fruitsData);
       // console.log("fecth data", queueData.data);
+      queueData.data.forEach((queue) => errorQueue.push(false))
       setFruits(fruitsData);
       setQueue(queueData.data);
     };
@@ -98,12 +100,16 @@ export default function Setting(props) {
 
   const handleClickAddQueue = () => {
     setQueue([...queue, { fruitID: " " }]);
+    setErrorQueue([...errorQueue, false])
   };
 
   const handleClickDeleteQueue = (index) => {
     let arrQueue = queue;
+    let arrErrorQueue = errorQueue
+    arrErrorQueue.splice(index, 1)
     arrQueue.splice(index, 1);
     setQueue([...arrQueue]);
+    setErrorQueue([...arrErrorQueue])
   };
 
   const handleChangeSelectBox = (e, index) => {
@@ -114,6 +120,17 @@ export default function Setting(props) {
   };
 
   const handleClickConfirm = async () => {
+    let arrErrorQueue = errorQueue
+    let status = false
+    queue.forEach((q,index) => {
+      if (q.fruitID == " ") {
+        arrErrorQueue[index] = true 
+        status = true
+      }
+    })
+
+    if (status) return setErrorQueue([...arrErrorQueue])
+
     const result = createQueue(queue);
     window.location.reload();
   };
@@ -154,13 +171,22 @@ export default function Setting(props) {
         >
           <Grid item xs={12} md={6} key={1}>
             <Box
-              sx={{
-                border: "1px line grey",
-                backgroundColor: "#d9d9d9",
-                width: "80%",
-                height: 824,
-                overflow: "auto",
-              }}
+              sx={ checkResponsive?
+                {
+                  border: "1px line grey",
+                  backgroundColor: "#d9d9d9",
+                  width: "80%",
+                  height: 824,
+                  overflow: "auto",
+                } :
+                {
+                  border: "1px line grey",
+                  backgroundColor: "#d9d9d9",
+                  width: "100%",
+                  height: 824,
+                  overflow: "auto",
+                }
+            }
             >
               <br />
               <Stack spacing={2} sx={{ width: "80%", margin: "auto" }}>
@@ -205,9 +231,10 @@ export default function Setting(props) {
             <Box
               sx={!checkResponsive ? {
                 backgroundColor: "#d9d9d9",
-                width: "80%",
+                width: "100%",
                 height: 824,
                 overflow: "auto",
+                
               }:
               {
                 backgroundColor: "#d9d9d9",
@@ -226,7 +253,7 @@ export default function Setting(props) {
                     data.fruitID !== "undefined" && (
                       <Box fullWidth sx={{ display: "flex" }} key={index}>
                         <Box sx={{ width: "90%" }}>
-                          <FormControl fullWidth>
+                          <FormControl fullWidth error={errorQueue[index]}>
                             <InputLabel
                               sx={{
                                 marginTop: "5px",
@@ -255,6 +282,7 @@ export default function Setting(props) {
                                 </MenuItem>
                               ))}
                             </Select>
+                            {errorQueue[index] && <FormHelperText>Please select the fruit</FormHelperText>}
                           </FormControl>
                         </Box>
                         <Box sx={{ width: "10%" }}>
