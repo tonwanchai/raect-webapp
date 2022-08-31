@@ -43,9 +43,9 @@ app.use(bodyParser.json({limit: '50mb'}));
 app.use(bodyParser.urlencoded({limit: '50mb',  extended: true }));
 app.use(cors());
 
-app.use(express.static(path.join(__dirname,"client/build"))) 
+app.use(express.static(path.join(__dirname,"build"))) 
 app.get("*",(req,res) => { 
-    res.sendFile(path.join(__dirname + "/client/build/index.html")) 
+    res.sendFile(path.join(__dirname + "build/index.html")) 
 }) 
 
 app.use(function(req, res, next) {
