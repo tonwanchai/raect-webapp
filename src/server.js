@@ -47,7 +47,8 @@ if (process.env.NODE_ENV) {
   app.use(express.static(path.join(__dirname.replace('src/',''),"build"))) 
   app.get("*",(req,res) => { 
       const index = path.join(__dirname, 'build', 'index.html');
-      res.sendFile(index.replace('src\\','')) 
+      let getPath = index.replace('src\\','')
+      res.sendFile(getPath) 
   })
 }
 
