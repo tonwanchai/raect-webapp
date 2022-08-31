@@ -39,8 +39,7 @@
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "users:import": "node src/config/userSeed",
-    "users:destroy": "node src/config/userSeed -d",
-    "heroku-postbuild": "npm install && npm run build"
+    "users:destroy": "node src/config/userSeed -d"  
   },
   "engines": {
     "node": "v16.16.0", 
